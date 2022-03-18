@@ -10,11 +10,15 @@ public class CardController : MonoBehaviour
     private Sprite[] spriteArray;
 
     public GameController gameController;
+    public DrawPile drawPile;
+
+    int cardNum = 0;
 
     // Start is called before the first frame update
     void Start()
     {
         gameController = FindObjectOfType<GameController>();
+        drawPile = FindObjectOfType<DrawPile>();
 
         spriteRenderer = gameObject.GetComponent<SpriteRenderer>();
 
@@ -25,7 +29,7 @@ public class CardController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
+       
     }
 
     void LoadSprites(AsyncOperationHandle<Sprite[]> handleToCheck)
@@ -35,17 +39,8 @@ public class CardController : MonoBehaviour
             spriteArray = handleToCheck.Result;
         }
 
-        int cardNum = 13;
-        
-        while (gameController.CardsDrawn.Contains(cardNum))
-        {
-                cardNum = Random.Range(0, 14 * gameController.Level - 1);
-                print(gameController.CardsDrawn.Count);
-        }
-
+        cardNum = drawPile.cardDrawn;
         ChangeSprite(cardNum);
-        gameController.CardsDrawn.Add(cardNum);
-
     }
 
     void ChangeSprite(int num)
