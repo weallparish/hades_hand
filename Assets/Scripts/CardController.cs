@@ -6,12 +6,16 @@ using UnityEngine.ResourceManagement.AsyncOperations;
 
 public class CardController : MonoBehaviour
 {
-    public SpriteRenderer spriteRenderer;
-    public Sprite[] spriteArray;
+    private SpriteRenderer spriteRenderer;
+    private Sprite[] spriteArray;
+
+    public GameController gameController;
 
     // Start is called before the first frame update
     void Start()
     {
+        gameController = FindObjectOfType<GameController>();
+
         spriteRenderer = gameObject.GetComponent<SpriteRenderer>();
 
         AsyncOperationHandle<Sprite[]> spriteHandler = Addressables.LoadAssetAsync<Sprite[]>("Assets/Sprites/cardsLarge_tilemap.png");
@@ -21,10 +25,7 @@ public class CardController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetMouseButtonDown(0))
-        {
-            ChangeSprite();
-        }
+
     }
 
     void LoadSprites(AsyncOperationHandle<Sprite[]> handleToCheck)
@@ -33,10 +34,22 @@ public class CardController : MonoBehaviour
         {
             spriteArray = handleToCheck.Result;
         }
+
+        int cardNum = 13;
+        
+        while (gameController.CardsDrawn.Contains(cardNum))
+        {
+                cardNum = Random.Range(0, 14 * gameController.Level - 1);
+                print(gameController.CardsDrawn.Count);
+        }
+
+        ChangeSprite(cardNum);
+        gameController.CardsDrawn.Add(cardNum);
+
     }
 
-    void ChangeSprite()
+    void ChangeSprite(int num)
     {
-        spriteRenderer.sprite = spriteArray[Random.Range(0, spriteArray.Length-1)];
+        spriteRenderer.sprite = spriteArray[num];
     }
 }
