@@ -5,6 +5,7 @@ using UnityEngine;
 public class GameController : MonoBehaviour
 {
     public int Level;
+    public int SelectedCard;
 
     // Start is called before the first frame update
     void Start()

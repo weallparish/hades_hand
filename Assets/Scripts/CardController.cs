@@ -8,6 +8,7 @@ public class CardController : MonoBehaviour
 {
     private SpriteRenderer spriteRenderer;
     private Sprite[] spriteArray;
+    private Animator animator;
 
     public GameController gameController;
     public DrawPile drawPile;
@@ -19,6 +20,7 @@ public class CardController : MonoBehaviour
     {
         gameController = FindObjectOfType<GameController>();
         drawPile = FindObjectOfType<DrawPile>();
+        animator = GetComponent<Animator>();
 
         spriteRenderer = gameObject.GetComponent<SpriteRenderer>();
 
@@ -29,10 +31,10 @@ public class CardController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-       
+    
     }
 
-    void LoadSprites(AsyncOperationHandle<Sprite[]> handleToCheck)
+    private void LoadSprites(AsyncOperationHandle<Sprite[]> handleToCheck)
     {
         if (handleToCheck.Status == AsyncOperationStatus.Succeeded)
         {
@@ -43,8 +45,13 @@ public class CardController : MonoBehaviour
         ChangeSprite(cardNum);
     }
 
-    void ChangeSprite(int num)
+    private void ChangeSprite(int num)
     {
         spriteRenderer.sprite = spriteArray[num];
+    }
+
+    private void OnMouseDown()
+    {
+        gameController.SelectedCard = cardNum;
     }
 }
