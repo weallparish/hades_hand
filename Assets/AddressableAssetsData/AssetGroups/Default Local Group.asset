@@ -21,6 +21,10 @@ MonoBehaviour:
     m_Address: Assets/Sprites/cardsLarge_tilemap.png
     m_ReadOnly: 0
     m_SerializedLabels: []
+  - m_GUID: 3cf262c6b9c38764f96ff3491755be8d
+    m_Address: Assets/Sprites/empty_card.png
+    m_ReadOnly: 0
+    m_SerializedLabels: []
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 7b9d8700ee3fc0e478f30df77fdf6cd4, type: 2}
   m_SchemaSet:

@@ -6,7 +6,6 @@ public class DrawPile : MonoBehaviour
 {
     public List<int> deckCards;
     public int cardDrawn;
-    public float lastCardPos;
 
     [SerializeField]
     private GameObject cardPrefab;
@@ -25,7 +24,8 @@ public class DrawPile : MonoBehaviour
         gameController = FindObjectOfType<GameController>();
         deckWidth = GameObject.Find("DeckSide");
         hand = GameObject.Find("Hand");
-        lastCardPos = -4;
+
+        cardDrawn = 99;
 
         deckCards = new List<int>();
 
@@ -45,7 +45,8 @@ public class DrawPile : MonoBehaviour
     {
         cardDrawn = deckCards[Random.Range(0, deckCards.Count)];
         deckCards.Remove(cardDrawn);
-        GameObject newCard = Instantiate(cardPrefab, new Vector3(lastCardPos += 1,(float) -4.5, (float) (-4 - lastCardPos)/100), Quaternion.identity, hand.transform);
+        gameController.Hand.Add(cardDrawn);
+        GameObject newCard = Instantiate(cardPrefab, new Vector3(gameController.Hand.Count - 4,(float) -4.5, (float) (-4 - (gameController.Hand.Count - 4))/100), Quaternion.identity, hand.transform);
 
         if (deckCards.Count < 1)
         {
