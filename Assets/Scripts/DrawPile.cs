@@ -29,10 +29,11 @@ public class DrawPile : MonoBehaviour
 
         deckCards = new List<int>();
 
-        for (int i = 0; i < 13; i++)
+        for (int i = 1; i < 13; i++)
         {
             deckCards.Add(i);
         }
+        deckCards.Add(14);
     }
 
     // Update is called once per frame
@@ -46,7 +47,7 @@ public class DrawPile : MonoBehaviour
         cardDrawn = deckCards[Random.Range(0, deckCards.Count)];
         deckCards.Remove(cardDrawn);
         gameController.Hand.Add(cardDrawn);
-        GameObject newCard = Instantiate(cardPrefab, new Vector3(gameController.Hand.Count - 4,(float) -4.5, (float) (-4 - (gameController.Hand.Count - 4))/100), Quaternion.identity, hand.transform);
+        Instantiate(cardPrefab, new Vector3(gameController.Hand.Count - 4,(float) -4.5, (float) (-4 - (gameController.Hand.Count - 4))/100), Quaternion.identity, hand.transform);
 
         if (deckCards.Count < 1)
         {

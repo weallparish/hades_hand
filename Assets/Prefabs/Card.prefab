@@ -11,7 +11,6 @@ GameObject:
   - component: {fileID: 1746568262235566637}
   - component: {fileID: 1746568262235566636}
   - component: {fileID: 1746568262235566638}
-  - component: {fileID: 5643434555994989053}
   - component: {fileID: 2335812336415881676}
   m_Layer: 0
   m_Name: Card
@@ -97,28 +96,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 32b60688f5952c54a8a9de318f6a8064, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  cardNum: 0
   emptyCard: {fileID: 21300000, guid: 3cf262c6b9c38764f96ff3491755be8d, type: 3}
   gameController: {fileID: 0}
   drawPile: {fileID: 0}
---- !u!95 &5643434555994989053
-Animator:
-  serializedVersion: 3
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1746568262235566635}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 303d2546a50ff8a4bacce85be3830007, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!61 &2335812336415881676
 BoxCollider2D:
   m_ObjectHideFlags: 0

@@ -9,10 +9,15 @@ public class CardController : MonoBehaviour
     private SpriteRenderer spriteRenderer;
     private Sprite[] spriteArray;
     private Animator animator;
+
+    [SerializeField]
     private int cardNum = 0;
 
     [SerializeField]
     private Sprite emptyCard;
+
+    [SerializeField]
+    private bool singleSlot;
 
     public GameController gameController;
     public DrawPile drawPile;
@@ -34,18 +39,21 @@ public class CardController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (gameController.PreviousSelectedCard == cardNum && gameController.SelectedCard == 99)
+        if (gameController.PreviousSelectedCard == cardNum && gameController.SelectedCard == 99 && !singleSlot)
         {
             gameController.Hand.Remove(cardNum);
             Destroy(this.gameObject);
         }
 
-        if (gameController.Hand.Contains(cardNum))
+        if (gameController.Hand.Contains(cardNum) && !singleSlot)
         {
-            int handIndex = gameController.Hand.IndexOf(cardNum);
-            print("MOVE POS: " + handIndex);
+            int handIndex = gameController.Hand.IndexOf(cardNum) + 1;
+            print(handIndex);
 
-            transform.position = new Vector3(handIndex - 4, (float)-4.5, (float)(-4 - (handIndex - 4)) / 100);
+            Vector3 cardPos = new Vector3(handIndex - 4, 0, (float)(-4 - (handIndex - 4)) / 100);
+            transform.localPosition = cardPos;
+
+            print(cardPos);
 
         }
     }
@@ -58,12 +66,13 @@ public class CardController : MonoBehaviour
         }
 
         cardNum = drawPile.cardDrawn;
+
         ChangeSprite(cardNum);
     }
 
     private void ChangeSprite(int num)
     {
-        if (drawPile.cardDrawn <= 55)
+        if (num <= 55)
         {
             spriteRenderer.sprite = spriteArray[num];
         }
@@ -76,10 +85,23 @@ public class CardController : MonoBehaviour
     private void OnMouseDown()
     {
         gameController.PreviousSelectedCard = gameController.SelectedCard;
+
         gameController.SelectedCard = cardNum;
 
-        if (gameController.SelectedCard == 99)
+        if (singleSlot && gameController.SelectedCard != 99)
         {
+            gameController.SelectedCard = 100;
+        }
+
+
+
+        if (gameController.SelectedCard == 99 && gameController.PreviousSelectedCard != 100)
+        {
+            if (singleSlot)
+            {
+                cardNum = gameController.PreviousSelectedCard;
+            }
+
             ChangeSprite(gameController.PreviousSelectedCard);
         }
     }
