@@ -4,8 +4,9 @@ using UnityEngine;
 
 public class DrawPile : MonoBehaviour
 {
-    public List<int> deckCards;
-    public int cardDrawn;
+    private List<int> deckCards;
+
+    private int cardDrawn;
 
     [SerializeField]
     private GameObject cardPrefab;
@@ -39,7 +40,46 @@ public class DrawPile : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (boxCollider.enabled == false && deckCards.Count > 0)
+        {
+            boxCollider.enabled = true;
 
+            foreach (SpriteRenderer r in renderers)
+            {
+                r.enabled = true;
+            }
+        }
+
+        if (gameController.Level == 2 && !deckCards.Contains(26))
+        {
+            for (int i = 15; i < 27; i++)
+            {
+                deckCards.Add(i);
+            }
+            deckCards.Add(28);
+        }
+
+        if (gameController.Level == 3 && !deckCards.Contains(40))
+        {
+            for (int i = 29; i < 41; i++)
+            {
+                deckCards.Add(i);
+            }
+            deckCards.Add(42);
+        }
+
+        if (gameController.Level == 4 && !deckCards.Contains(54))
+        {
+            for (int i = 43; i < 55; i++)
+            {
+                deckCards.Add(i);
+            }
+        }
+    }
+
+    public int getCardDrawn()
+    {
+        return cardDrawn;
     }
 
     public void DrawCard()

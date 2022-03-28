@@ -11,6 +11,8 @@ public class CardController : MonoBehaviour
 
     [SerializeField]
     private int cardNum = 0;
+    [SerializeField]
+    private int cardCost = 0;
 
     private GameController gameController;
     private DrawPile drawPile;
@@ -20,6 +22,8 @@ public class CardController : MonoBehaviour
     {
         gameController = FindObjectOfType<GameController>();
         drawPile = FindObjectOfType<DrawPile>();
+
+        cardCost = 0;
 
         spriteRenderer = gameObject.GetComponent<SpriteRenderer>();
 
@@ -49,6 +53,11 @@ public class CardController : MonoBehaviour
         }
     }
 
+    public int getCost()
+    {
+        return cardCost;
+    }
+
     private void LoadSprites(AsyncOperationHandle<Sprite[]> handleToCheck)
     {
         if (handleToCheck.Status == AsyncOperationStatus.Succeeded)
@@ -56,7 +65,7 @@ public class CardController : MonoBehaviour
             spriteArray = handleToCheck.Result;
         }
 
-        cardNum = drawPile.cardDrawn;
+        cardNum = drawPile.getCardDrawn();
 
         ChangeSprite(cardNum);
     }
@@ -65,11 +74,16 @@ public class CardController : MonoBehaviour
     {
         spriteRenderer.sprite = spriteArray[num];
 
+        if (num == 14)
+        {
+            cardCost = 5;
+        }
+
     }
 
     private void OnMouseDown()
     {
         gameController.SelectedCard = cardNum;
-
+        gameController.SelectedCost = cardCost;
     }
 }

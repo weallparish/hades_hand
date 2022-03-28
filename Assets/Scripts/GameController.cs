@@ -6,12 +6,11 @@ public class GameController : MonoBehaviour
 {
     public int Level;
     public int SelectedCard;
+    public int SelectedCost;
     public int PlayedCard;
     public List<int> Hand;
 
-    [SerializeField]
     private int PlaysMax = 1;
-    [SerializeField]
     private int DrawsMax = 1;
 
     public int Plays = 1;
@@ -38,6 +37,8 @@ public class GameController : MonoBehaviour
 
     [SerializeField]
     private DrawPile drawPile;
+    [SerializeField]
+    private TMPro.TextMeshProUGUI spCounter;
 
     // Start is called before the first frame update
     void Start()
@@ -69,6 +70,8 @@ public class GameController : MonoBehaviour
         {
             spadeSprite.sprite = spadeImg;
         }
+
+        spCounter.text = "SPs: " + SacrificePoints;
     }
 
     private IEnumerator BeginRound()
