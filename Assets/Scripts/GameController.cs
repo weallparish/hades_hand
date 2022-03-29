@@ -9,6 +9,7 @@ public class GameController : MonoBehaviour
     public int SelectedCost;
     public int PlayedCard;
     public List<int> Hand;
+    public int maxPlayable;
 
     private int PlaysMax = 1;
     private int DrawsMax = 1;
@@ -48,6 +49,8 @@ public class GameController : MonoBehaviour
         SelectedCard = 99;
         PlayedCard = 99;
 
+        maxPlayable = 14;
+
         diamondSprite = diamondCard.GetComponent<SpriteRenderer>();
         clubSprite = clubCard.GetComponent<SpriteRenderer>();
         spadeSprite = spadeCard.GetComponent<SpriteRenderer>();
@@ -65,6 +68,7 @@ public class GameController : MonoBehaviour
         if (Level >= 3)
         {
             clubSprite.sprite = clubImg;
+            maxPlayable = 28;
         }
         if (Level >= 4)
         {

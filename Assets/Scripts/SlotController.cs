@@ -20,11 +20,13 @@ public class SlotController : MonoBehaviour
 
     private Sprite[] spriteArray;
     private bool isSelected = false;
+    private bool summonSick = false;
 
     // Start is called before the first frame update
     void Start()
     {
         isSelected = false;
+        summonSick = false;
 
         spriteRenderer = gameObject.GetComponent<SpriteRenderer>();
         gameController = FindObjectOfType<GameController>();
@@ -79,9 +81,15 @@ public class SlotController : MonoBehaviour
 
     private void OnMouseDown()
     {
+        PlayCard();
+
+    }
+
+    private void PlayCard()
+    {
         if (cards.Count < slotLimit)
         {
-            if (gameController.Plays > 0  && gameController.SacrificePoints >= gameController.SelectedCost || slotLimit > 1)
+            if ((gameController.Plays > 0 && gameController.SacrificePoints >= gameController.SelectedCost && (gameController.SelectedCard <= gameController.maxPlayable || gameController.SelectedCard % 14 == 0)) || slotLimit > 1)
             {
                 ChangeSprite(gameController.SelectedCard);
                 cards.Add(gameController.SelectedCard);
@@ -92,6 +100,7 @@ public class SlotController : MonoBehaviour
                     gameController.SacrificePoints -= gameController.SelectedCost;
                     gameController.Plays -= 1;
 
+                    summonSick = true;
                     StartCoroutine(ActivateAbility());
                 }
             }
@@ -103,10 +112,27 @@ public class SlotController : MonoBehaviour
         }
         else if (isEditable)
         {
-            gameController.SelectedCard = cards[cards.Count - 1];
-            isSelected = true;
-        }
+            if (gameController.SelectedCard == cards[cards.Count-1] + 14 && slotLimit == 1) 
+            {
+                ChangeSprite(gameController.SelectedCard);
+                cards[cards.Count - 1] = gameController.SelectedCard;
+                gameController.PlayedCard = gameController.SelectedCard;
 
+                if (slotLimit == 1)
+                {
+                    gameController.SacrificePoints -= gameController.SelectedCost;
+                    gameController.Plays -= 1;
+
+                    summonSick = true;
+                    StartCoroutine(ActivateAbility());
+                }
+            }
+            else
+            {
+                gameController.SelectedCard = cards[cards.Count - 1];
+                isSelected = true;
+            }
+        }
     }
 
     private IEnumerator ActivateAbility()
