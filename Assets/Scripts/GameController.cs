@@ -44,6 +44,8 @@ public class GameController : MonoBehaviour
     private TMPro.TextMeshProUGUI spCounter;
     [SerializeField]
     private UnityEngine.UI.Button passButton;
+    [SerializeField]
+    private UnityEngine.UI.Button attackButton;
 
     // Start is called before the first frame update
     void Start()
@@ -62,6 +64,7 @@ public class GameController : MonoBehaviour
         spadeSprite = spadeCard.GetComponent<SpriteRenderer>();
 
         passButton.onClick.AddListener(PassTurn);
+        attackButton.onClick.AddListener(Attack);
 
         StartCoroutine(BeginRound());
     }
@@ -112,13 +115,26 @@ public class GameController : MonoBehaviour
     {
         Draws = DrawsMax;
         Plays = PlaysMax;
+        turnNum++;
         playerTurn = true;
     }
 
     private void PassTurn()
     {
         playerTurn = false;
+        EnemyTurn();
+    }
 
+    private void Attack()
+    {
+        SlotController[] slots = FindObjectsOfType<SlotController>();
+
+        foreach(SlotController s in slots)
+        {
+            s.Attack();
+        }
+
+        playerTurn = false;
         EnemyTurn();
     }
 }

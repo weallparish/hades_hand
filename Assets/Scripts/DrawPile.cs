@@ -7,9 +7,12 @@ public class DrawPile : MonoBehaviour
     private List<int> deckCards;
 
     private int cardDrawn;
+    private int deckLevel;
 
     [SerializeField]
     private GameObject cardPrefab;
+    [SerializeField]
+    private SlotController discardPile;
 
     private BoxCollider2D boxCollider;
     private SpriteRenderer[] renderers;
@@ -26,6 +29,7 @@ public class DrawPile : MonoBehaviour
         deckWidth = GameObject.Find("DeckSide");
         hand = GameObject.Find("Hand");
 
+        deckLevel = 1;
         cardDrawn = 99;
 
         deckCards = new List<int>();
@@ -40,6 +44,9 @@ public class DrawPile : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        float xPos = (float)(-0.56 + ((13 - deckCards.Count + 2) / gameController.Level * 0.01));
+        deckWidth.transform.localPosition = new Vector3(xPos, deckWidth.transform.localPosition.y, deckWidth.transform.localPosition.z);
+
         if (boxCollider.enabled == false && deckCards.Count > 0)
         {
             boxCollider.enabled = true;
@@ -50,30 +57,42 @@ public class DrawPile : MonoBehaviour
             }
         }
 
-        if (gameController.Level == 2 && !deckCards.Contains(26))
+        if (gameController.Level == 2 && deckLevel < 2)
         {
             for (int i = 15; i < 27; i++)
             {
                 deckCards.Add(i);
             }
             deckCards.Add(28);
+
+            foreach(int c in discardPile.cards)
+            {
+                deckCards.Add(c);
+            }
+            discardPile.cards.Clear();
+
+            deckLevel = 2;
         }
 
-        if (gameController.Level == 3 && !deckCards.Contains(40))
+        if (gameController.Level == 3 && deckLevel < 3)
         {
             for (int i = 29; i < 41; i++)
             {
                 deckCards.Add(i);
             }
             deckCards.Add(42);
+
+            deckLevel = 3;
         }
 
-        if (gameController.Level == 4 && !deckCards.Contains(54))
+        if (gameController.Level == 4 && deckLevel < 4)
         {
             for (int i = 43; i < 55; i++)
             {
                 deckCards.Add(i);
             }
+
+            deckLevel = 4;
         }
     }
 
@@ -89,8 +108,6 @@ public class DrawPile : MonoBehaviour
         gameController.Hand.Add(cardDrawn);
         Instantiate(cardPrefab, new Vector3(gameController.Hand.Count - 4, (float)-4.5, (float)(-4 - (gameController.Hand.Count - 4)) / 100), Quaternion.identity, hand.transform);
 
-        print(cardDrawn);
-
         if (deckCards.Count < 1)
         {
             boxCollider.enabled = false;
@@ -100,9 +117,6 @@ public class DrawPile : MonoBehaviour
                 r.enabled = false;
             }
         }
-
-        float xPos = (float)(-0.56 + ((13 - deckCards.Count + 2) / gameController.Level * 0.01));
-        deckWidth.transform.localPosition = new Vector3(xPos, deckWidth.transform.localPosition.y, deckWidth.transform.localPosition.z);
     }
 
     private void OnMouseDown()

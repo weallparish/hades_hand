@@ -15,11 +15,14 @@ public class SlotController : MonoBehaviour
     private int slotLimit = 1;
     [SerializeField]
     private bool isEditable = false;
-    [SerializeField]
-    private List<int> cards;
 
+    public List<int> cards;
+
+    private int turnPlayed;
     private Sprite[] spriteArray;
     private bool isSelected = false;
+
+    [SerializeField]
     private bool summonSick = false;
 
     // Start is called before the first frame update
@@ -60,6 +63,15 @@ public class SlotController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (cards.Count > 0 )
+        {
+            ChangeSprite(cards[cards.Count - 1]);
+        }
+        else
+        {
+            ChangeSprite(-1);
+        }
+
         if (gameController.PlayedCard == cards[cards.Count-1] && isSelected)
         {
             cards.RemoveAt(0);
@@ -72,10 +84,15 @@ public class SlotController : MonoBehaviour
             }
             else
             {
-                spriteRenderer.sprite = emptyCard;
+                ChangeSprite(-1);
             }
 
             isSelected = false;
+        }
+
+        if (gameController.turnNum > turnPlayed)
+        {
+            summonSick = false;
         }
     }
 
@@ -94,7 +111,6 @@ public class SlotController : MonoBehaviour
         {
             if ((gameController.Plays > 0 && gameController.SacrificePoints >= gameController.SelectedCost && (gameController.SelectedCard <= gameController.maxPlayable || gameController.SelectedCard % 14 == 0)) || slotLimit > 1)
             {
-                ChangeSprite(gameController.SelectedCard);
                 cards.Add(gameController.SelectedCard);
                 gameController.PlayedCard = gameController.SelectedCard;
 
@@ -104,11 +120,12 @@ public class SlotController : MonoBehaviour
                     gameController.Plays -= 1;
 
                     summonSick = true;
+                    turnPlayed = gameController.turnNum;
                     StartCoroutine(ActivateAbility());
                 }
             }
 
-            if (!isEditable)
+            if (!isEditable && gameController.SelectedCard != 99)
             {
                 gameController.SacrificePoints += 1;
             }
@@ -117,7 +134,6 @@ public class SlotController : MonoBehaviour
         {
             if (gameController.SelectedCard == cards[cards.Count-1] + 14 && slotLimit == 1) 
             {
-                ChangeSprite(gameController.SelectedCard);
                 cards[cards.Count - 1] = gameController.SelectedCard;
                 gameController.PlayedCard = gameController.SelectedCard;
 
@@ -127,6 +143,7 @@ public class SlotController : MonoBehaviour
                     gameController.Plays -= 1;
 
                     summonSick = true;
+                    turnPlayed = gameController.turnNum;
                     StartCoroutine(ActivateAbility());
                 }
             }
@@ -161,6 +178,11 @@ public class SlotController : MonoBehaviour
             cards.Clear();
             ChangeSprite(-1);
         }
+    }
+
+    public void Attack()
+    {
+        print("Attack");
     }
 
 }
