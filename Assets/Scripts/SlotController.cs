@@ -81,7 +81,10 @@ public class SlotController : MonoBehaviour
 
     private void OnMouseDown()
     {
-        PlayCard();
+        if (gameController.playerTurn)
+        {
+            PlayCard();
+        }
 
     }
 

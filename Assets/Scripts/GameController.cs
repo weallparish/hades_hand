@@ -10,13 +10,15 @@ public class GameController : MonoBehaviour
     public int PlayedCard;
     public List<int> Hand;
     public int maxPlayable;
+    public bool playerTurn = false;
+    public int turnNum = 0;
 
     private int PlaysMax = 1;
     private int DrawsMax = 1;
 
     public int Plays = 1;
     public int Draws = 1;
-    public int SacrificePoints = 0;
+    public int SacrificePoints = 1;
 
     [SerializeField]
     private Sprite diamondImg;
@@ -40,11 +42,15 @@ public class GameController : MonoBehaviour
     private DrawPile drawPile;
     [SerializeField]
     private TMPro.TextMeshProUGUI spCounter;
+    [SerializeField]
+    private UnityEngine.UI.Button passButton;
 
     // Start is called before the first frame update
     void Start()
     {
         Level = 1;
+        playerTurn = false;
+        turnNum = 1;
 
         SelectedCard = 99;
         PlayedCard = 99;
@@ -54,6 +60,8 @@ public class GameController : MonoBehaviour
         diamondSprite = diamondCard.GetComponent<SpriteRenderer>();
         clubSprite = clubCard.GetComponent<SpriteRenderer>();
         spadeSprite = spadeCard.GetComponent<SpriteRenderer>();
+
+        passButton.onClick.AddListener(PassTurn);
 
         StartCoroutine(BeginRound());
     }
@@ -91,5 +99,26 @@ public class GameController : MonoBehaviour
             drawPile.DrawCard();
             yield return new WaitForSeconds(0.1f);
         }
+
+        playerTurn = true;
+    }
+
+    private void EnemyTurn()
+    {
+        PlayerTurn();
+    }
+
+    private void PlayerTurn()
+    {
+        Draws = DrawsMax;
+        Plays = PlaysMax;
+        playerTurn = true;
+    }
+
+    private void PassTurn()
+    {
+        playerTurn = false;
+
+        EnemyTurn();
     }
 }

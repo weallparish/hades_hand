@@ -83,7 +83,10 @@ public class CardController : MonoBehaviour
 
     private void OnMouseDown()
     {
-        gameController.SelectedCard = cardNum;
-        gameController.SelectedCost = cardCost;
+        if (gameController.playerTurn)
+        {
+            gameController.SelectedCard = cardNum;
+            gameController.SelectedCost = cardCost;
+        }
     }
 }

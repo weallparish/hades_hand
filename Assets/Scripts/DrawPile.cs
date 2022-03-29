@@ -107,7 +107,7 @@ public class DrawPile : MonoBehaviour
 
     private void OnMouseDown()
     {
-        if (gameController.Draws > 0 && gameController.Hand.Count < 7)
+        if (gameController.Draws > 0 && gameController.Hand.Count < 7 && gameController.playerTurn)
         {
             DrawCard();
             gameController.Draws -= 1;

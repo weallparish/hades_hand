@@ -432,6 +432,7 @@ MonoBehaviour:
   PlayedCard: 0
   Hand: 
   maxPlayable: 0
+  playerTurn: 1
   Plays: 1
   Draws: 1
   SacrificePoints: 0
@@ -443,6 +444,7 @@ MonoBehaviour:
   spadeCard: {fileID: 1984569082}
   drawPile: {fileID: 1846048877}
   spCounter: {fileID: 143245032}
+  passButton: {fileID: 1928282302}
 --- !u!1 &209025338
 GameObject:
   m_ObjectHideFlags: 0
