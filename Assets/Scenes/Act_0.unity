@@ -314,7 +314,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 79d264983ca61eb43bed5a4c5b2f7368, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  emptyCard: {fileID: 0}
+  emptyCard: {fileID: 21300000, guid: 3cf262c6b9c38764f96ff3491755be8d, type: 3}
   slotLimit: 999
   isEditable: 0
   cards: 
@@ -2523,7 +2523,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7edb712d0d6b2b243b3b03193d3e8899, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cardPrefab: {fileID: 1746568262235566635, guid: 82bd99e2d0e138f4dab88d954adafde3, type: 3}
+  cardPrefab: {fileID: 6522180245832288008, guid: 6d1efbaa8a2e48f4ba0759b1651d1d34, type: 3}
+  discardPile: {fileID: 173710976}
 --- !u!61 &1846048878
 BoxCollider2D:
   m_ObjectHideFlags: 0

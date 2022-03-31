@@ -15,14 +15,14 @@ public class SlotController : MonoBehaviour
     private int slotLimit = 1;
     [SerializeField]
     private bool isEditable = false;
+    [SerializeField]
+    private GameObject cardPrefab;
 
     public List<int> cards;
 
     private int turnPlayed;
     private Sprite[] spriteArray;
     private bool isSelected = false;
-
-    [SerializeField]
     private bool summonSick = false;
 
     // Start is called before the first frame update
@@ -72,11 +72,11 @@ public class SlotController : MonoBehaviour
             ChangeSprite(-1);
         }
 
-        if (gameController.PlayedCard == cards[cards.Count-1] && isSelected)
+        if (gameController.PlayedCard.getCardNum() == cards[cards.Count-1] && isSelected)
         {
             cards.RemoveAt(0);
-            gameController.SelectedCard = 99;
-            gameController.PlayedCard = 99;
+            gameController.SelectedCard = null;
+            gameController.PlayedCard = null;
 
             if (cards.Count > 0)
             {
@@ -109,14 +109,14 @@ public class SlotController : MonoBehaviour
     {
         if (cards.Count < slotLimit)
         {
-            if ((gameController.Plays > 0 && gameController.SacrificePoints >= gameController.SelectedCost && (gameController.SelectedCard <= gameController.maxPlayable || gameController.SelectedCard % 14 == 0)) || slotLimit > 1)
+            if ((gameController.Plays > 0 && gameController.SacrificePoints >= gameController.SelectedCard.getCost() && (gameController.SelectedCard.getCardNum() <= gameController.maxPlayable || gameController.SelectedCard.getCardNum() % 14 == 0)) || slotLimit > 1)
             {
-                cards.Add(gameController.SelectedCard);
+                cards.Add(gameController.SelectedCard.getCardNum());
                 gameController.PlayedCard = gameController.SelectedCard;
 
                 if (slotLimit == 1)
                 {
-                    gameController.SacrificePoints -= gameController.SelectedCost;
+                    gameController.SacrificePoints -= gameController.SelectedCard.getCost();
                     gameController.Plays -= 1;
 
                     summonSick = true;
@@ -125,21 +125,21 @@ public class SlotController : MonoBehaviour
                 }
             }
 
-            if (!isEditable && gameController.SelectedCard != 99)
+            if (!isEditable && gameController.SelectedCard != null)
             {
                 gameController.SacrificePoints += 1;
             }
         }
         else if (isEditable)
         {
-            if (gameController.SelectedCard == cards[cards.Count-1] + 14 && slotLimit == 1) 
+            if ((gameController.SelectedCard.getCardNum() == cards[cards.Count-1] + 14) && slotLimit == 1) 
             {
-                cards[cards.Count - 1] = gameController.SelectedCard;
+                cards[cards.Count - 1] = gameController.SelectedCard.getCardNum();
                 gameController.PlayedCard = gameController.SelectedCard;
 
                 if (slotLimit == 1)
                 {
-                    gameController.SacrificePoints -= gameController.SelectedCost;
+                    gameController.SacrificePoints -= gameController.SelectedCard.getCost();
                     gameController.Plays -= 1;
 
                     summonSick = true;
@@ -149,7 +149,13 @@ public class SlotController : MonoBehaviour
             }
             else
             {
-                gameController.SelectedCard = cards[cards.Count - 1];
+                print("Move slot card test");
+
+                GameObject newCard = Instantiate(cardPrefab, new Vector3(0, 0, 10), Quaternion.identity);
+                CardController cardValue = newCard.GetComponent<CardController>();
+                cardValue.setCardNum(cards[cards.Count - 1]);
+
+                gameController.SelectedCard = cardValue;
                 isSelected = true;
             }
         }

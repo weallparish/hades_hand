@@ -5,9 +5,8 @@ using UnityEngine;
 public class GameController : MonoBehaviour
 {
     public int Level;
-    public int SelectedCard;
-    public int SelectedCost;
-    public int PlayedCard;
+    public CardController SelectedCard;
+    public CardController PlayedCard;
     public List<int> Hand;
     public int maxPlayable;
     public bool playerTurn = false;
@@ -54,8 +53,8 @@ public class GameController : MonoBehaviour
         playerTurn = false;
         turnNum = 1;
 
-        SelectedCard = 99;
-        PlayedCard = 99;
+        SelectedCard = null;
+        PlayedCard = null;
 
         maxPlayable = 14;
 

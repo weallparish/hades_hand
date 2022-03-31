@@ -7,11 +7,10 @@ using UnityEngine.ResourceManagement.AsyncOperations;
 public class CardController : MonoBehaviour
 {
     private SpriteRenderer spriteRenderer;
+    private Animator animator;
     private Sprite[] spriteArray;
 
-    [SerializeField]
     private int cardNum = 0;
-    [SerializeField]
     private int cardCost = 0;
 
     private GameController gameController;
@@ -25,7 +24,8 @@ public class CardController : MonoBehaviour
 
         cardCost = 0;
 
-        spriteRenderer = gameObject.GetComponent<SpriteRenderer>();
+        spriteRenderer = gameObject.GetComponentInChildren<SpriteRenderer>();
+        animator = gameObject.GetComponentInChildren<Animator>();
 
         AsyncOperationHandle<Sprite[]> spriteHandler = Addressables.LoadAssetAsync<Sprite[]>("Assets/Sprites/cardsLarge_tilemap.png");
 
@@ -35,10 +35,10 @@ public class CardController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (gameController.PlayedCard == cardNum)
+        if (gameController.PlayedCard.getCardNum() == cardNum)
         {
-            gameController.SelectedCard = 99;
-            gameController.PlayedCard = 99;
+            gameController.SelectedCard = null;
+            gameController.PlayedCard = null;
             gameController.Hand.Remove(cardNum);
             Destroy(this.gameObject);
         }
@@ -56,6 +56,16 @@ public class CardController : MonoBehaviour
     public int getCost()
     {
         return cardCost;
+    }
+
+    public int getCardNum()
+    {
+        return cardNum;
+    }
+
+    public void setCardNum(int num)
+    {
+        cardNum = num;
     }
 
     private void LoadSprites(AsyncOperationHandle<Sprite[]> handleToCheck)
@@ -85,8 +95,17 @@ public class CardController : MonoBehaviour
     {
         if (gameController.playerTurn)
         {
-            gameController.SelectedCard = cardNum;
-            gameController.SelectedCost = cardCost;
+            gameController.SelectedCard = this;
         }
+    }
+
+    private void OnMouseEnter()
+    {
+        animator.SetBool("TouchingMouse", true);
+    }
+
+    private void OnMouseExit()
+    {
+        animator.SetBool("TouchingMouse", false);
     }
 }
