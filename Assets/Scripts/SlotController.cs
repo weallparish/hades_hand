@@ -72,7 +72,7 @@ public class SlotController : MonoBehaviour
             ChangeSprite(-1);
         }
 
-        if (gameController.PlayedCard.getCardNum() == cards[cards.Count-1] && isSelected)
+        if (gameController.PlayedCard != null && gameController.PlayedCard.getCardNum() == cards[cards.Count-1] && isSelected)
         {
             cards.RemoveAt(0);
             gameController.SelectedCard = null;
@@ -100,59 +100,69 @@ public class SlotController : MonoBehaviour
     {
         if (gameController.playerTurn)
         {
-            PlayCard();
+            StartCoroutine(PlayCard());
         }
 
     }
 
-    private void PlayCard()
+    private IEnumerator PlayCard()
     {
         if (cards.Count < slotLimit)
         {
-            if ((gameController.Plays > 0 && gameController.SacrificePoints >= gameController.SelectedCard.getCost() && (gameController.SelectedCard.getCardNum() <= gameController.maxPlayable || gameController.SelectedCard.getCardNum() % 14 == 0)) || slotLimit > 1)
+            if (gameController.SelectedCard != null)
             {
-                cards.Add(gameController.SelectedCard.getCardNum());
-                gameController.PlayedCard = gameController.SelectedCard;
-
-                if (slotLimit == 1)
+                if ((gameController.Plays > 0 && gameController.SacrificePoints >= gameController.SelectedCard.getCost() && (gameController.SelectedCard.getCardNum() <= gameController.maxPlayable || gameController.SelectedCard.getCardNum() % 14 == 0)) || slotLimit > 1)
                 {
-                    gameController.SacrificePoints -= gameController.SelectedCard.getCost();
-                    gameController.Plays -= 1;
+                    cards.Add(gameController.SelectedCard.getCardNum());
+                    gameController.PlayedCard = gameController.SelectedCard;
 
-                    summonSick = true;
-                    turnPlayed = gameController.turnNum;
-                    StartCoroutine(ActivateAbility());
+                    if (slotLimit == 1)
+                    {
+                        gameController.SacrificePoints -= gameController.SelectedCard.getCost();
+                        gameController.Plays -= 1;
+
+                        summonSick = true;
+                        turnPlayed = gameController.turnNum;
+                        StartCoroutine(ActivateAbility());
+                    }
                 }
-            }
 
-            if (!isEditable && gameController.SelectedCard != null)
-            {
-                gameController.SacrificePoints += 1;
+                if (!isEditable)
+                {
+                    gameController.SacrificePoints += 1;
+                }
             }
         }
         else if (isEditable)
         {
-            if ((gameController.SelectedCard.getCardNum() == cards[cards.Count-1] + 14) && slotLimit == 1) 
+            if (gameController.SelectedCard != null)
             {
-                cards[cards.Count - 1] = gameController.SelectedCard.getCardNum();
-                gameController.PlayedCard = gameController.SelectedCard;
-
-                if (slotLimit == 1)
+                if ((gameController.SelectedCard.getCardNum() == cards[cards.Count - 1] + 14) && slotLimit == 1)
                 {
-                    gameController.SacrificePoints -= gameController.SelectedCard.getCost();
-                    gameController.Plays -= 1;
+                    cards[cards.Count - 1] = gameController.SelectedCard.getCardNum();
+                    gameController.PlayedCard = gameController.SelectedCard;
 
-                    summonSick = true;
-                    turnPlayed = gameController.turnNum;
-                    StartCoroutine(ActivateAbility());
+                    if (slotLimit == 1)
+                    {
+                        gameController.SacrificePoints -= gameController.SelectedCard.getCost();
+                        gameController.Plays -= 1;
+
+                        summonSick = true;
+                        turnPlayed = gameController.turnNum;
+                        StartCoroutine(ActivateAbility());
+                    }
                 }
             }
+         
             else
             {
                 print("Move slot card test");
 
                 GameObject newCard = Instantiate(cardPrefab, new Vector3(0, 0, 10), Quaternion.identity);
                 CardController cardValue = newCard.GetComponent<CardController>();
+
+                yield return new WaitForSeconds(0.1f);
+
                 cardValue.setCardNum(cards[cards.Count - 1]);
 
                 gameController.SelectedCard = cardValue;

@@ -35,7 +35,7 @@ public class CardController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (gameController.PlayedCard.getCardNum() == cardNum)
+        if (gameController.PlayedCard != null && gameController.PlayedCard.getCardNum() == cardNum)
         {
             gameController.SelectedCard = null;
             gameController.PlayedCard = null;

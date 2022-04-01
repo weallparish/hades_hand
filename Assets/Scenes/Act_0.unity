@@ -317,8 +317,8 @@ MonoBehaviour:
   emptyCard: {fileID: 21300000, guid: 3cf262c6b9c38764f96ff3491755be8d, type: 3}
   slotLimit: 999
   isEditable: 0
+  cardPrefab: {fileID: 0}
   cards: 
-  summonSick: 0
 --- !u!212 &173710977
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -428,9 +428,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Level: 1
-  SelectedCard: 0
-  SelectedCost: 0
-  PlayedCard: 0
+  SelectedCard: {fileID: 0}
+  PlayedCard: {fileID: 0}
   Hand: 
   maxPlayable: 0
   playerTurn: 1
@@ -752,8 +751,8 @@ MonoBehaviour:
   emptyCard: {fileID: 21300000, guid: 3cf262c6b9c38764f96ff3491755be8d, type: 3}
   slotLimit: 1
   isEditable: 1
+  cardPrefab: {fileID: 6522180245832288008, guid: 6d1efbaa8a2e48f4ba0759b1651d1d34, type: 3}
   cards: 
-  summonSick: 0
 --- !u!212 &558933731
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -1669,8 +1668,8 @@ MonoBehaviour:
   emptyCard: {fileID: 21300000, guid: 3cf262c6b9c38764f96ff3491755be8d, type: 3}
   slotLimit: 1
   isEditable: 1
+  cardPrefab: {fileID: 6522180245832288008, guid: 6d1efbaa8a2e48f4ba0759b1651d1d34, type: 3}
   cards: 
-  summonSick: 0
 --- !u!212 &1109646834
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -2197,8 +2196,8 @@ MonoBehaviour:
   emptyCard: {fileID: 21300000, guid: 3cf262c6b9c38764f96ff3491755be8d, type: 3}
   slotLimit: 1
   isEditable: 1
+  cardPrefab: {fileID: 6522180245832288008, guid: 6d1efbaa8a2e48f4ba0759b1651d1d34, type: 3}
   cards: 
-  summonSick: 0
 --- !u!61 &1460229890
 BoxCollider2D:
   m_ObjectHideFlags: 0

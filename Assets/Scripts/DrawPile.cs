@@ -30,7 +30,7 @@ public class DrawPile : MonoBehaviour
         hand = GameObject.Find("Hand");
 
         deckLevel = 1;
-        cardDrawn = 99;
+        cardDrawn = 0;
 
         deckCards = new List<int>();
 
