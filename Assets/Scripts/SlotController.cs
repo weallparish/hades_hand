@@ -156,8 +156,6 @@ public class SlotController : MonoBehaviour
          
             else
             {
-                print("Move slot card test");
-
                 GameObject newCard = Instantiate(cardPrefab, new Vector3(0, 0, 10), Quaternion.identity);
                 CardController cardValue = newCard.GetComponent<CardController>();
 
@@ -198,7 +196,15 @@ public class SlotController : MonoBehaviour
 
     public void Attack()
     {
-        print("Attack");
+        if (cards.Count > 0 && !summonSick)
+        {
+            print("Attack");
+        }
+
+        //Call function asking enemy slot if they'd like to block
+
+        //If no block was made
+        gameController.EnemyHealth--;
     }
 
 }

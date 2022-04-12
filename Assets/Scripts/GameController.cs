@@ -12,6 +12,9 @@ public class GameController : MonoBehaviour
     public bool playerTurn = false;
     public int turnNum = 0;
 
+    public int PlayerHealth = 5;
+    public int EnemyHealth = 5;
+
     private int PlaysMax = 1;
     private int DrawsMax = 1;
 
@@ -63,7 +66,6 @@ public class GameController : MonoBehaviour
         spadeSprite = spadeCard.GetComponent<SpriteRenderer>();
 
         passButton.onClick.AddListener(PassTurn);
-        attackButton.onClick.AddListener(Attack);
 
         StartCoroutine(BeginRound());
     }
@@ -96,6 +98,9 @@ public class GameController : MonoBehaviour
         Plays = PlaysMax;
         SacrificePoints = 0;
 
+        PlayerHealth = 5;
+        EnemyHealth = 5;
+
         for (int i=0; i<3; i++)
         {
             drawPile.DrawCard();
@@ -120,19 +125,6 @@ public class GameController : MonoBehaviour
 
     private void PassTurn()
     {
-        playerTurn = false;
-        EnemyTurn();
-    }
-
-    private void Attack()
-    {
-        SlotController[] slots = FindObjectsOfType<SlotController>();
-
-        foreach(SlotController s in slots)
-        {
-            s.Attack();
-        }
-
         playerTurn = false;
         EnemyTurn();
     }
