@@ -45,6 +45,10 @@ public class GameController : MonoBehaviour
     [SerializeField]
     private TMPro.TextMeshProUGUI spCounter;
     [SerializeField]
+    private TMPro.TextMeshProUGUI healthCounter;
+    [SerializeField]
+    private TMPro.TextMeshProUGUI enemyCounter;
+    [SerializeField]
     private UnityEngine.UI.Button passButton;
     [SerializeField]
     private UnityEngine.UI.Button attackButton;
@@ -88,6 +92,8 @@ public class GameController : MonoBehaviour
         }
 
         spCounter.text = "SPs: " + SacrificePoints;
+        healthCounter.text = "Health: " + PlayerHealth;
+        enemyCounter.text = "Enemy: " + EnemyHealth;
     }
 
     private IEnumerator BeginRound()
