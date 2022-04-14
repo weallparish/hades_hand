@@ -4,12 +4,9 @@ using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.AsyncOperations;
 
-public class EnemySlotController : MonoBehaviour
+public class EnemySlotController : CardRenderer
 {
-    private SpriteRenderer spriteRenderer;
     private GameController gameController;
-
-    private Sprite[] spriteArray;
     private int cardNum;
 
     [SerializeField]
@@ -19,25 +16,19 @@ public class EnemySlotController : MonoBehaviour
     void Start()
     {
         gameController = FindObjectOfType<GameController>();
-        spriteRenderer = gameObject.GetComponent<SpriteRenderer>();
 
-        AsyncOperationHandle<Sprite[]> spriteHandler = Addressables.LoadAssetAsync<Sprite[]>("Assets/Sprites/cardsLarge_tilemap.png");
-
-        spriteHandler.Completed += LoadSprites;
+        cardNum = -1;
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+        ChangeSprite(cardNum);
     }
 
-    private void LoadSprites(AsyncOperationHandle<Sprite[]> handleToCheck)
+    public int GetCardNum()
     {
-        if (handleToCheck.Status == AsyncOperationStatus.Succeeded)
-        {
-            spriteArray = handleToCheck.Result;
-        }
+        return cardNum;
     }
 
     private void ChangeSprite(int num)
@@ -52,4 +43,5 @@ public class EnemySlotController : MonoBehaviour
         }
 
     }
+
 }

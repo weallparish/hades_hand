@@ -102,7 +102,6 @@ public class SlotController : MonoBehaviour
         {
             StartCoroutine(PlayCard());
         }
-
     }
 
     private IEnumerator PlayCard()
@@ -198,13 +197,19 @@ public class SlotController : MonoBehaviour
     {
         if (cards.Count > 0 && !summonSick)
         {
-            print("Attack");
+            int blockCard = gameController.EnemyBlock(cards[cards.Count - 1]);
+
+            if (blockCard <= cards[cards.Count -1])
+            {
+                gameController.EnemyHealth--;
+                summonSick = true;
+                turnPlayed = gameController.turnNum;
+            }
+            else
+            {
+                cards.Clear();
+            }
         }
-
-        //Call function asking enemy slot if they'd like to block
-
-        //If no block was made
-        gameController.EnemyHealth--;
     }
 
 }

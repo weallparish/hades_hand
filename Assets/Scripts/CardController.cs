@@ -7,13 +7,15 @@ using UnityEngine.ResourceManagement.AsyncOperations;
 public class CardController : MonoBehaviour
 {
     private SpriteRenderer spriteRenderer;
-    private Animator animator;
     private Sprite[] spriteArray;
+
+    private Animator animator;
 
     private int cardNum = 0;
     private int cardCost = 0;
 
     private GameController gameController;
+
     private DrawPile drawPile;
 
     // Start is called before the first frame update
@@ -106,6 +108,9 @@ public class CardController : MonoBehaviour
 
     private void OnMouseExit()
     {
-        animator.SetBool("TouchingMouse", false);
+        if (gameController.SelectedCard != this)
+        {
+            animator.SetBool("TouchingMouse", false);
+        }
     }
 }

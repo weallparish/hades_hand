@@ -8,6 +8,7 @@ public class GameController : MonoBehaviour
     public CardController SelectedCard;
     public CardController PlayedCard;
     public List<int> Hand;
+    public List<int> EnemyField;
     public int maxPlayable;
     public bool playerTurn = false;
     public int turnNum = 0;
@@ -118,6 +119,18 @@ public class GameController : MonoBehaviour
 
     private void EnemyTurn()
     {
+        EnemyField.Clear();
+
+        EnemySlotController[] enemySlots = FindObjectsOfType<EnemySlotController>();
+
+        foreach (EnemySlotController slot in enemySlots)
+        {
+            if (slot.GetCardNum() > -1)
+            {
+                EnemyField.Add(slot.GetCardNum());
+            }
+        }
+
         PlayerTurn();
     }
 
@@ -133,5 +146,10 @@ public class GameController : MonoBehaviour
     {
         playerTurn = false;
         EnemyTurn();
+    }
+
+    public int EnemyBlock(int attackNum)
+    {
+        return -1;
     }
 }
