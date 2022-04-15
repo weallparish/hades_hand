@@ -15,6 +15,8 @@ public class EnemySlotController : CardRenderer
     // Start is called before the first frame update
     void Start()
     {
+        Setup();
+
         gameController = FindObjectOfType<GameController>();
 
         cardNum = -1;
@@ -29,6 +31,11 @@ public class EnemySlotController : CardRenderer
     public int GetCardNum()
     {
         return cardNum;
+    }
+
+    public void SetCardNum(int num)
+    {
+        cardNum = num;
     }
 
     private void ChangeSprite(int num)

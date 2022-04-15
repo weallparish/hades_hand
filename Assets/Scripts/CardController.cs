@@ -4,13 +4,11 @@ using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.AsyncOperations;
 
-public class CardController : MonoBehaviour
+public class CardController : CardRenderer
 {
-    private SpriteRenderer spriteRenderer;
-    private Sprite[] spriteArray;
-
     private Animator animator;
 
+    [SerializeField]
     private int cardNum = 0;
     private int cardCost = 0;
 
@@ -21,17 +19,14 @@ public class CardController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        Setup();
+
         gameController = FindObjectOfType<GameController>();
         drawPile = FindObjectOfType<DrawPile>();
 
         cardCost = 0;
 
-        spriteRenderer = gameObject.GetComponentInChildren<SpriteRenderer>();
         animator = gameObject.GetComponentInChildren<Animator>();
-
-        AsyncOperationHandle<Sprite[]> spriteHandler = Addressables.LoadAssetAsync<Sprite[]>("Assets/Sprites/cardsLarge_tilemap.png");
-
-        spriteHandler.Completed += LoadSprites;
     }
 
     // Update is called once per frame
@@ -53,6 +48,8 @@ public class CardController : MonoBehaviour
             transform.localPosition = cardPos;
 
         }
+
+        ChangeSprite(cardNum);
     }
 
     public int getCost()
@@ -68,18 +65,6 @@ public class CardController : MonoBehaviour
     public void setCardNum(int num)
     {
         cardNum = num;
-    }
-
-    private void LoadSprites(AsyncOperationHandle<Sprite[]> handleToCheck)
-    {
-        if (handleToCheck.Status == AsyncOperationStatus.Succeeded)
-        {
-            spriteArray = handleToCheck.Result;
-        }
-
-        cardNum = drawPile.getCardDrawn();
-
-        ChangeSprite(cardNum);
     }
 
     private void ChangeSprite(int num)

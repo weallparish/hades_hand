@@ -106,7 +106,8 @@ public class DrawPile : MonoBehaviour
         cardDrawn = deckCards[Random.Range(0, deckCards.Count)];
         deckCards.Remove(cardDrawn);
         gameController.Hand.Add(cardDrawn);
-        Instantiate(cardPrefab, new Vector3(gameController.Hand.Count - 4, (float)-4.5, (float)(-4 - (gameController.Hand.Count - 4)) / 100), Quaternion.identity, hand.transform);
+        GameObject card = Instantiate(cardPrefab, new Vector3(gameController.Hand.Count - 4, (float)-4.5, (float)(-4 - (gameController.Hand.Count - 4)) / 100), Quaternion.identity, hand.transform);
+        card.GetComponent<CardController>().setCardNum(cardDrawn);
 
         if (deckCards.Count < 1)
         {

@@ -4,9 +4,8 @@ using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.AsyncOperations;
 
-public class SlotController : MonoBehaviour
+public class SlotController : CardRenderer
 {
-    private SpriteRenderer spriteRenderer;
     private GameController gameController;
 
     [SerializeField]
@@ -21,30 +20,19 @@ public class SlotController : MonoBehaviour
     public List<int> cards;
 
     private int turnPlayed;
-    private Sprite[] spriteArray;
     private bool isSelected = false;
     private bool summonSick = false;
 
     // Start is called before the first frame update
     void Start()
     {
+        Setup();
+
         isSelected = false;
         summonSick = false;
 
-        spriteRenderer = gameObject.GetComponent<SpriteRenderer>();
         gameController = FindObjectOfType<GameController>();
 
-        AsyncOperationHandle<Sprite[]> spriteHandler = Addressables.LoadAssetAsync<Sprite[]>("Assets/Sprites/cardsLarge_tilemap.png");
-
-        spriteHandler.Completed += LoadSprites;
-    }
-
-    private void LoadSprites(AsyncOperationHandle<Sprite[]> handleToCheck)
-    {
-        if (handleToCheck.Status == AsyncOperationStatus.Succeeded)
-        {
-            spriteArray = handleToCheck.Result;
-        }
     }
 
     private void ChangeSprite(int num)

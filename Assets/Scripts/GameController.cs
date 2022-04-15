@@ -9,6 +9,8 @@ public class GameController : MonoBehaviour
     public CardController PlayedCard;
     public List<int> Hand;
     public List<int> EnemyField;
+    public List<int> EnemyDeck;
+    public EnemySlotController[] EnemySlots;
     public int maxPlayable;
     public bool playerTurn = false;
     public int turnNum = 0;
@@ -70,6 +72,8 @@ public class GameController : MonoBehaviour
         clubSprite = clubCard.GetComponent<SpriteRenderer>();
         spadeSprite = spadeCard.GetComponent<SpriteRenderer>();
 
+        EnemySlots = FindObjectsOfType<EnemySlotController>();
+
         passButton.onClick.AddListener(PassTurn);
 
         StartCoroutine(BeginRound());
@@ -108,6 +112,8 @@ public class GameController : MonoBehaviour
         PlayerHealth = 5;
         EnemyHealth = 5;
 
+        EnemyDeck = new List<int> { 5, 1, 3 };
+
         for (int i=0; i<3; i++)
         {
             drawPile.DrawCard();
@@ -125,10 +131,13 @@ public class GameController : MonoBehaviour
 
         foreach (EnemySlotController slot in enemySlots)
         {
-            if (slot.GetCardNum() > -1)
-            {
-                EnemyField.Add(slot.GetCardNum());
-            }
+            EnemyField.Add(slot.GetCardNum());
+        }
+
+        if (EnemyField.Contains(-1))
+        {
+            EnemySlots[EnemyField.IndexOf(-1)].SetCardNum(EnemyDeck[0]);
+            EnemyDeck.RemoveAt(0);
         }
 
         PlayerTurn();

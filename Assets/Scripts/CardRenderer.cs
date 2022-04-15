@@ -12,6 +12,11 @@ public class CardRenderer : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+
+    }
+
+    public void Setup()
+    {
         spriteRenderer = gameObject.GetComponentInChildren<SpriteRenderer>();
 
         AsyncOperationHandle<Sprite[]> spriteHandler = Addressables.LoadAssetAsync<Sprite[]>("Assets/Sprites/cardsLarge_tilemap.png");
