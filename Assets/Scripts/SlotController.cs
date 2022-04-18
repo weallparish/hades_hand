@@ -187,7 +187,7 @@ public class SlotController : CardRenderer
         {
             int blockCard = gameController.EnemyBlock(cards[cards.Count - 1]);
 
-            if (blockCard <= cards[cards.Count -1])
+            if (blockCard < cards[cards.Count -1])
             {
                 gameController.EnemyHealth--;
                 summonSick = true;

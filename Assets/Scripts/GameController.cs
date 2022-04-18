@@ -127,9 +127,9 @@ public class GameController : MonoBehaviour
     {
         EnemyField.Clear();
 
-        EnemySlotController[] enemySlots = FindObjectsOfType<EnemySlotController>();
+        EnemySlots = FindObjectsOfType<EnemySlotController>();
 
-        foreach (EnemySlotController slot in enemySlots)
+        foreach (EnemySlotController slot in EnemySlots)
         {
             EnemyField.Add(slot.GetCardNum());
         }
@@ -145,6 +145,15 @@ public class GameController : MonoBehaviour
 
     private void PlayerTurn()
     {
+        EnemyField.Clear();
+
+        EnemySlots = FindObjectsOfType<EnemySlotController>();
+
+        foreach (EnemySlotController slot in EnemySlots)
+        {
+            EnemyField.Add(slot.GetCardNum());
+        }
+
         Draws = DrawsMax;
         Plays = PlaysMax;
         turnNum++;
@@ -157,8 +166,63 @@ public class GameController : MonoBehaviour
         EnemyTurn();
     }
 
+    private List<int> FindGreater(List<int> list, int val)
+    {
+        List<int> returnList = new List<int>();
+
+        foreach (int i in list)
+        {
+            if (i > val)
+            {
+                returnList.Add(i);
+            }
+        }
+
+        return returnList;
+    }
+
+    private int FindSmallest(List<int> list)
+    {
+        int smallestVal = 999;
+
+        foreach (int i in list)
+        {
+            if (i < smallestVal && i > -1)
+            {
+                smallestVal = i;
+            }
+        }
+
+        return smallestVal;
+    }
+
     public int EnemyBlock(int attackNum)
     {
-        return -1;
+        List<int> cardsGreater = FindGreater(EnemyField, attackNum);
+
+        if (cardsGreater.Count == 0)
+        {
+            if (EnemyField.Count > 0)
+            {
+                foreach (EnemySlotController slot in EnemySlots)
+                {
+                    if (slot.GetCardNum() == FindSmallest(EnemyField))
+                    {
+                        slot.SetCardNum(-1);
+                        return FindSmallest(EnemyField);
+                    }
+                }
+                return -1;
+            }
+            else
+            {
+                return -1;
+            }
+        }
+        else
+        {
+            print(FindSmallest(cardsGreater));
+            return FindSmallest(cardsGreater);
+        }
     }
 }

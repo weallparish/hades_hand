@@ -6,6 +6,9 @@ using UnityEngine.ResourceManagement.AsyncOperations;
 
 public class CardRenderer : MonoBehaviour
 {
+    /// <summary>
+    /// The renderer behind the sprite
+    /// </summary>
     public SpriteRenderer spriteRenderer;
     public Sprite[] spriteArray;
 
