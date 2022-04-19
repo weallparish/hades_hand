@@ -112,7 +112,7 @@ public class GameController : MonoBehaviour
         PlayerHealth = 5;
         EnemyHealth = 5;
 
-        EnemyDeck = new List<int> { 5, 1, 3 };
+        EnemyDeck = new List<int> {1,2,3,4,5,6,7,8,9,10,11,12};
 
         for (int i=0; i<3; i++)
         {
@@ -136,8 +136,10 @@ public class GameController : MonoBehaviour
 
         if (EnemyField.Contains(-1))
         {
-            EnemySlots[EnemyField.IndexOf(-1)].SetCardNum(EnemyDeck[0]);
-            EnemyDeck.RemoveAt(0);
+            int cardChosen = Random.RandomRange(0,EnemyDeck.Count);
+
+            EnemySlots[EnemyField.IndexOf(-1)].SetCardNum(EnemyDeck[cardChosen]);
+            EnemyDeck.RemoveAt(cardChosen);
         }
 
         PlayerTurn();

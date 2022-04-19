@@ -187,13 +187,13 @@ public class SlotController : CardRenderer
         {
             int blockCard = gameController.EnemyBlock(cards[cards.Count - 1]);
 
-            if (blockCard < cards[cards.Count -1])
+            if (blockCard == -1)
             {
                 gameController.EnemyHealth--;
                 summonSick = true;
                 turnPlayed = gameController.turnNum;
             }
-            else
+            else if (blockCard >= cards[0])
             {
                 cards.Clear();
             }
