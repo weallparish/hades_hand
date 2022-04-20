@@ -32,13 +32,13 @@ public class CardController : CardRenderer
     // Update is called once per frame
     void Update()
     {
-        if (gameController.PlayedCard != null && gameController.PlayedCard.getCardNum() == cardNum)
-        {
-            gameController.SelectedCard = null;
-            gameController.PlayedCard = null;
-            gameController.Hand.Remove(cardNum);
-            Destroy(this.gameObject);
-        }
+        //if (gameController.PlayedCard != null && gameController.PlayedCard.getCardNum() == cardNum)
+        //{
+        //    gameController.SelectedCard = null;
+        //    gameController.PlayedCard = null;
+        //    gameController.Hand.Remove(cardNum);
+        //    Destroy(this.gameObject);
+        //}
 
         if (gameController.Hand.Contains(cardNum))
         {
@@ -46,7 +46,6 @@ public class CardController : CardRenderer
 
             Vector3 cardPos = new Vector3(handIndex - 4, 0, (float)(-4 - (handIndex - 4)) / 100);
             transform.localPosition = cardPos;
-
         }
 
         ChangeSprite(cardNum);
@@ -78,11 +77,30 @@ public class CardController : CardRenderer
 
     }
 
+    public void MoveTo(Vector3 pos)
+    {
+        gameController.Hand.Remove(cardNum);
+
+        while (transform.position != pos)
+        {
+            print("moving");
+            transform.localPosition = Vector3.MoveTowards(transform.position, pos, 0.01f);
+        }
+
+        gameController.SelectedCard = null;
+        gameController.PlayedCard = null;
+        Destroy(this.gameObject);
+    }
+
     private void OnMouseDown()
     {
-        if (gameController.playerTurn)
+        if (gameController.playerTurn && gameController.SelectedCard != this)
         {
             gameController.SelectedCard = this;
+        }
+        else if (gameController.SelectedCard == this)
+        {
+            gameController.SelectedCard = null;
         }
     }
 

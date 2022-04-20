@@ -100,6 +100,7 @@ public class SlotController : CardRenderer
             {
                 if ((gameController.Plays > 0 && gameController.SacrificePoints >= gameController.SelectedCard.getCost() && (gameController.SelectedCard.getCardNum() <= gameController.maxPlayable || gameController.SelectedCard.getCardNum() % 14 == 0)) || slotLimit > 1)
                 {
+
                     cards.Add(gameController.SelectedCard.getCardNum());
                     gameController.PlayedCard = gameController.SelectedCard;
 
@@ -111,6 +112,17 @@ public class SlotController : CardRenderer
                         summonSick = true;
                         turnPlayed = gameController.turnNum;
                         StartCoroutine(ActivateAbility());
+                    }
+
+                    CardController[] handCards = FindObjectsOfType<CardController>();
+
+                    foreach (CardController card in handCards)
+                    {
+                        if (card.getCardNum() == gameController.SelectedCard.getCardNum())
+                        {
+                            card.MoveTo(transform.position);
+                            break;
+                        }
                     }
                 }
 

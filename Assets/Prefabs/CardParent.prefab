@@ -91,7 +91,7 @@ Animator:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3547311456049585458}
-  m_Enabled: 0
+  m_Enabled: 1
   m_Avatar: {fileID: 0}
   m_Controller: {fileID: 9100000, guid: 50e4790a9d64b954cb5bfd00f2fc32b0, type: 2}
   m_CullingMode: 0
@@ -173,3 +173,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 32b60688f5952c54a8a9de318f6a8064, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  spriteRenderer: {fileID: 0}
+  spriteArray: []
+  cardNum: 0

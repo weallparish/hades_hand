@@ -136,7 +136,7 @@ public class GameController : MonoBehaviour
 
         if (EnemyField.Contains(-1))
         {
-            int cardChosen = Random.RandomRange(0,EnemyDeck.Count);
+            int cardChosen = Random.Range(0,EnemyDeck.Count);
 
             EnemySlots[EnemyField.IndexOf(-1)].SetCardNum(EnemyDeck[cardChosen]);
             EnemyDeck.RemoveAt(cardChosen);
