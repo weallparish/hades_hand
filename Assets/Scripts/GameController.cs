@@ -112,7 +112,7 @@ public class GameController : MonoBehaviour
         PlayerHealth = 5;
         EnemyHealth = 5;
 
-        EnemyDeck = new List<int> {1,2,3,4,5,6,7,8,9,10,11,12};
+        EnemyDeck = new List<int> {0,1,2,3,4,5,6,7,8,9,10,11,12};
 
         for (int i=0; i<3; i++)
         {
@@ -138,7 +138,7 @@ public class GameController : MonoBehaviour
         {
             int cardChosen = Random.Range(0,EnemyDeck.Count);
 
-            EnemySlots[EnemyField.IndexOf(-1)].SetCardNum(EnemyDeck[cardChosen]);
+            EnemySlots[EnemyField.LastIndexOf(-1)].SetCardNum(EnemyDeck[cardChosen]);
             EnemyDeck.RemoveAt(cardChosen);
         }
 

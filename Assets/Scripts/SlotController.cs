@@ -6,21 +6,53 @@ using UnityEngine.ResourceManagement.AsyncOperations;
 
 public class SlotController : CardRenderer
 {
+    /// <summary>
+    /// Game controller running entire game
+    /// </summary>
     private GameController gameController;
 
+    /// <summary>
+    /// Sprite to render the lack of a card
+    /// </summary>
     [SerializeField]
     private Sprite emptyCard;
+
+    /// <summary>
+    /// Limit on amount of cards allowed in a slot
+    /// </summary>
     [SerializeField]
     private int slotLimit = 1;
+
+    /// <summary>
+    /// Dictates whether cards can be removed from the slot and moved around
+    /// </summary>
     [SerializeField]
     private bool isEditable = false;
+
+    /// <summary>
+    /// Prefab of card controller to spawn
+    /// </summary>
     [SerializeField]
     private GameObject cardPrefab;
 
+    /// <summary>
+    /// List of cards contained in slot
+    /// </summary>
     public List<int> cards;
 
+    /// <summary>
+    /// Turn that slot was updated
+    /// </summary>
     private int turnPlayed;
+
+    /// <summary>
+    /// Shows whether the slot is selected
+    /// </summary>
     private bool isSelected = false;
+
+    /// <summary>
+    /// Dictates if card can attack
+    /// </summary>
     private bool summonSick = false;
 
     // Start is called before the first frame update
@@ -51,9 +83,12 @@ public class SlotController : CardRenderer
     // Update is called once per frame
     void Update()
     {
-        if (cards.Count > 0 )
+        if (cards.Count > 0)
         {
-            ChangeSprite(cards[cards.Count - 1]);
+            if (gameController.PlayedCard == null)
+            {
+                ChangeSprite(cards[cards.Count - 1]);
+            }
         }
         else
         {
@@ -63,7 +98,6 @@ public class SlotController : CardRenderer
         if (gameController.PlayedCard != null && gameController.PlayedCard.getCardNum() == cards[cards.Count-1] && isSelected)
         {
             cards.RemoveAt(0);
-            gameController.SelectedCard = null;
             gameController.PlayedCard = null;
 
             if (cards.Count > 0)
@@ -114,16 +148,9 @@ public class SlotController : CardRenderer
                         StartCoroutine(ActivateAbility());
                     }
 
-                    CardController[] handCards = FindObjectsOfType<CardController>();
+                    gameController.SelectedCard.MoveTo(transform.position);
+                    gameController.SelectedCard.setTemporary(false);
 
-                    foreach (CardController card in handCards)
-                    {
-                        if (card.getCardNum() == gameController.SelectedCard.getCardNum())
-                        {
-                            card.MoveTo(transform.position);
-                            break;
-                        }
-                    }
                 }
 
                 if (!isEditable)
@@ -150,15 +177,28 @@ public class SlotController : CardRenderer
                         turnPlayed = gameController.turnNum;
                         StartCoroutine(ActivateAbility());
                     }
+
+                    CardController[] handCards = FindObjectsOfType<CardController>();
+
+                    foreach (CardController card in handCards)
+                    {
+                        if (card.getCardNum() == gameController.SelectedCard.getCardNum())
+                        {
+                            card.MoveTo(transform.position);
+                            break;
+                        }
+                    }
                 }
             }
          
             else
             {
-                GameObject newCard = Instantiate(cardPrefab, new Vector3(0, 0, 10), Quaternion.identity);
+                GameObject newCard = Instantiate(cardPrefab, new Vector3(transform.position.x, transform.position.y, transform.position.z), Quaternion.identity);
                 CardController cardValue = newCard.GetComponent<CardController>();
+                cardValue.setTemporary(true);
+                cardValue.MoveTo(transform.position);
 
-                yield return new WaitForSeconds(0.1f);
+                yield return new WaitForSeconds(0.01f);
 
                 cardValue.setCardNum(cards[cards.Count - 1]);
 
@@ -198,12 +238,12 @@ public class SlotController : CardRenderer
         if (cards.Count > 0 && !summonSick)
         {
             int blockCard = gameController.EnemyBlock(cards[cards.Count - 1]);
+            summonSick = true;
+            turnPlayed = gameController.turnNum;
 
             if (blockCard == -1)
             {
                 gameController.EnemyHealth--;
-                summonSick = true;
-                turnPlayed = gameController.turnNum;
             }
             else if (blockCard >= cards[0])
             {

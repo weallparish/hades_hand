@@ -6,66 +6,123 @@ using UnityEngine.ResourceManagement.AsyncOperations;
 
 public class CardController : CardRenderer
 {
+    /// <summary>
+    /// Animator of the game object
+    /// </summary>
     private Animator animator;
 
+    /// <summary>
+    /// Value of the card
+    /// </summary>
     [SerializeField]
     private int cardNum = 0;
+
+    /// <summary>
+    /// Cost of the card (default of 0)
+    /// </summary>
     private int cardCost = 0;
 
+    /// <summary>
+    /// Position card should drift towards
+    /// </summary>
+    private Vector3 cardTarget;
+
+    /// <summary>
+    /// Game controller running entire game
+    /// </summary>
     private GameController gameController;
+    
+    /// <summary>
+    /// Dictates if a card is part of the hand or for temporary use
+    /// </summary>
+    [SerializeField]
+    private bool temporary = false;
 
-    private DrawPile drawPile;
-
-    // Start is called before the first frame update
+    /// <summary>
+    /// Called before the first frame
+    /// </summary>
     void Start()
     {
         Setup();
 
         gameController = FindObjectOfType<GameController>();
-        drawPile = FindObjectOfType<DrawPile>();
 
         cardCost = 0;
 
         animator = gameObject.GetComponentInChildren<Animator>();
     }
 
-    // Update is called once per frame
+    /// <summary>
+    /// Called once per frame
+    /// </summary>
     void Update()
     {
-        //if (gameController.PlayedCard != null && gameController.PlayedCard.getCardNum() == cardNum)
-        //{
-        //    gameController.SelectedCard = null;
-        //    gameController.PlayedCard = null;
-        //    gameController.Hand.Remove(cardNum);
-        //    Destroy(this.gameObject);
-        //}
 
         if (gameController.Hand.Contains(cardNum))
         {
             int handIndex = gameController.Hand.IndexOf(cardNum) + 1;
 
-            Vector3 cardPos = new Vector3(handIndex - 4, 0, (float)(-4 - (handIndex - 4)) / 100);
-            transform.localPosition = cardPos;
+            cardTarget = new Vector3(handIndex - 4, 0, (float)(-4 - (handIndex - 4)) / 100);
+            transform.localPosition = Vector3.MoveTowards(transform.localPosition, cardTarget, 0.1f);
+        }
+        else if (temporary)
+        {
+            transform.position = Vector3.MoveTowards(transform.position, cardTarget, 0.1f);
+        }
+        else
+        {
+            transform.position = Vector3.MoveTowards(transform.position, cardTarget, 0.1f);
+
+            if (Vector3.Distance(transform.position,cardTarget) < 0.15f)
+            {
+                gameController.SelectedCard = null;
+                Destroy(this.gameObject);
+            }
         }
 
         ChangeSprite(cardNum);
     }
 
+    /// <summary>
+    /// Sets a card as temporary or non-temporary
+    /// </summary>
+    /// <param name="val">"true" or "false"</param>
+    public void setTemporary(bool val)
+    {
+        temporary = val;
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns>cardCost</returns>
     public int getCost()
     {
         return cardCost;
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns>cardNum</returns>
     public int getCardNum()
     {
         return cardNum;
     }
 
+    /// <summary>
+    /// Sets value of card to num
+    /// </summary>
+    /// <param name="num">Value to set card to</param>
     public void setCardNum(int num)
     {
         cardNum = num;
     }
 
+    /// <summary>
+    /// Changes sprite to specified value
+    /// </summary>
+    /// <param name="num">Value to change sprite to</param>
     private void ChangeSprite(int num)
     {
         spriteRenderer.sprite = spriteArray[num];
@@ -77,21 +134,28 @@ public class CardController : CardRenderer
 
     }
 
+    /// <summary>
+    /// Sets a new move target and detaches card from the hand
+    /// </summary>
+    /// <param name="pos">Position to float towards</param>
     public void MoveTo(Vector3 pos)
     {
-        gameController.Hand.Remove(cardNum);
-
-        while (transform.position != pos)
+        if (!temporary)
         {
-            print("moving");
-            transform.localPosition = Vector3.MoveTowards(transform.position, pos, 0.01f);
+            gameController.Hand.Remove(cardNum);
+            cardTarget = new Vector3(pos.x, pos.y - 0.25f, pos.z);
+        }
+        else
+        {
+            cardTarget = pos;
         }
 
-        gameController.SelectedCard = null;
-        gameController.PlayedCard = null;
-        Destroy(this.gameObject);
+
     }
 
+    /// <summary>
+    /// Activated when card is clicked
+    /// </summary>
     private void OnMouseDown()
     {
         if (gameController.playerTurn && gameController.SelectedCard != this)
@@ -104,14 +168,23 @@ public class CardController : CardRenderer
         }
     }
 
+    /// <summary>
+    /// Activated when card is hovered over
+    /// </summary>
     private void OnMouseEnter()
     {
-        animator.SetBool("TouchingMouse", true);
+        if (!temporary)
+        {
+            animator.SetBool("TouchingMouse", true);
+        }
     }
 
+    /// <summary>
+    /// Activated when card isn't hovered over
+    /// </summary>
     private void OnMouseExit()
     {
-        if (gameController.SelectedCard != this)
+        if (gameController.SelectedCard != this && !temporary)
         {
             animator.SetBool("TouchingMouse", false);
         }

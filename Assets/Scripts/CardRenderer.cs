@@ -7,17 +7,25 @@ using UnityEngine.ResourceManagement.AsyncOperations;
 public class CardRenderer : MonoBehaviour
 {
     /// <summary>
-    /// The renderer behind the sprite
+    /// The renderer of the sprite
     /// </summary>
     public SpriteRenderer spriteRenderer;
+    /// <summary>
+    /// Stores all card sprites 
+    /// </summary>
     public Sprite[] spriteArray;
 
-    // Start is called before the first frame update
+    /// <summary>
+    /// Called before the first frame
+    /// </summary>
     void Start()
     {
 
     }
 
+    /// <summary>
+    /// Sets default values for sprite renderer and loads sprites
+    /// </summary>
     public void Setup()
     {
         spriteRenderer = gameObject.GetComponentInChildren<SpriteRenderer>();
@@ -27,12 +35,18 @@ public class CardRenderer : MonoBehaviour
         spriteHandler.Completed += LoadSprites;
     }
 
-    // Update is called once per frame
+    /// <summary>
+    /// Called once per frame
+    /// </summary>
     void Update()
     {
         
     }
 
+    /// <summary>
+    /// Loads the sprites into the sprite array
+    /// </summary>
+    /// <param name="handleToCheck"></param>
     private void LoadSprites(AsyncOperationHandle<Sprite[]> handleToCheck)
     {
         if (handleToCheck.Status == AsyncOperationStatus.Succeeded)
@@ -41,6 +55,10 @@ public class CardRenderer : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Changes the sprite
+    /// </summary>
+    /// <param name="num">Value of sprite to change to</param>
     private void ChangeSprite(int num)
     {
         spriteRenderer.sprite = spriteArray[num];

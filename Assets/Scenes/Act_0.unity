@@ -243,7 +243,7 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: 106.3418, y: 0, z: 0, w: 0}
+  m_margin: {x: 3.034592, y: 0, z: 0, w: 0}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_hasFontAssetChanged: 0
@@ -448,11 +448,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 79d264983ca61eb43bed5a4c5b2f7368, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  spriteRenderer: {fileID: 0}
+  spriteArray: []
   emptyCard: {fileID: 21300000, guid: 3cf262c6b9c38764f96ff3491755be8d, type: 3}
   slotLimit: 999
   isEditable: 0
   cardPrefab: {fileID: 0}
   cards: 
+  isSelected: 0
 --- !u!212 &173710977
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -565,6 +568,9 @@ MonoBehaviour:
   SelectedCard: {fileID: 0}
   PlayedCard: {fileID: 0}
   Hand: 
+  EnemyField: 
+  EnemyDeck: 
+  EnemySlots: []
   maxPlayable: 0
   playerTurn: 1
   turnNum: 0
@@ -886,11 +892,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 79d264983ca61eb43bed5a4c5b2f7368, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  spriteRenderer: {fileID: 0}
+  spriteArray: []
   emptyCard: {fileID: 21300000, guid: 3cf262c6b9c38764f96ff3491755be8d, type: 3}
   slotLimit: 1
   isEditable: 1
   cardPrefab: {fileID: 6522180245832288008, guid: 6d1efbaa8a2e48f4ba0759b1651d1d34, type: 3}
   cards: 
+  isSelected: 0
 --- !u!212 &558933731
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -1479,6 +1488,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0b42366c9f2b65a4d9c01ac73ef63da9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  spriteRenderer: {fileID: 0}
+  spriteArray: []
   emptyCard: {fileID: 21300000, guid: 3cf262c6b9c38764f96ff3491755be8d, type: 3}
 --- !u!61 &763590101
 BoxCollider2D:
@@ -2205,11 +2216,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 79d264983ca61eb43bed5a4c5b2f7368, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  spriteRenderer: {fileID: 0}
+  spriteArray: []
   emptyCard: {fileID: 21300000, guid: 3cf262c6b9c38764f96ff3491755be8d, type: 3}
   slotLimit: 1
   isEditable: 1
   cardPrefab: {fileID: 6522180245832288008, guid: 6d1efbaa8a2e48f4ba0759b1651d1d34, type: 3}
   cards: 
+  isSelected: 0
 --- !u!212 &1109646834
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -2340,6 +2354,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0b42366c9f2b65a4d9c01ac73ef63da9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  spriteRenderer: {fileID: 0}
+  spriteArray: []
   emptyCard: {fileID: 21300000, guid: 3cf262c6b9c38764f96ff3491755be8d, type: 3}
 --- !u!61 &1134772259
 BoxCollider2D:
@@ -2463,6 +2479,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0b42366c9f2b65a4d9c01ac73ef63da9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  spriteRenderer: {fileID: 0}
+  spriteArray: []
   emptyCard: {fileID: 21300000, guid: 3cf262c6b9c38764f96ff3491755be8d, type: 3}
 --- !u!61 &1150524074
 BoxCollider2D:
@@ -2869,11 +2887,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 79d264983ca61eb43bed5a4c5b2f7368, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  spriteRenderer: {fileID: 0}
+  spriteArray: []
   emptyCard: {fileID: 21300000, guid: 3cf262c6b9c38764f96ff3491755be8d, type: 3}
   slotLimit: 1
   isEditable: 1
   cardPrefab: {fileID: 6522180245832288008, guid: 6d1efbaa8a2e48f4ba0759b1651d1d34, type: 3}
   cards: 
+  isSelected: 0
 --- !u!61 &1460229890
 BoxCollider2D:
   m_ObjectHideFlags: 0
