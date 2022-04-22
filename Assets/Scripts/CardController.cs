@@ -43,12 +43,16 @@ public class CardController : CardRenderer
     /// </summary>
     void Start()
     {
+        //Run setup function from parent class (load sprites)
         Setup();
 
+        //Find game controller
         gameController = FindObjectOfType<GameController>();
 
+        //Set default card cost to 0
         cardCost = 0;
 
+        //Find animator
         animator = gameObject.GetComponentInChildren<Animator>();
     }
 
@@ -57,29 +61,40 @@ public class CardController : CardRenderer
     /// </summary>
     void Update()
     {
-
+        //If the hand contains the current card
         if (gameController.Hand.Contains(cardNum))
         {
+            //Set index in hand
             int handIndex = gameController.Hand.IndexOf(cardNum) + 1;
 
+            //Move to nearest open slot in the hand
             cardTarget = new Vector3(handIndex - 4, 0, (float)(-4 - (handIndex - 4)) / 100);
             transform.localPosition = Vector3.MoveTowards(transform.localPosition, cardTarget, 0.1f);
         }
+
+        //If the card is temporary
         else if (temporary)
         {
+            //Move towards the slot the card is assigned to
             transform.position = Vector3.MoveTowards(transform.position, cardTarget, 0.1f);
         }
+
+        //If the hand does not contain the card and it isn't temporary
         else
         {
+            //Move towards the final position
             transform.position = Vector3.MoveTowards(transform.position, cardTarget, 0.1f);
 
+            //Once the card has reached it's destination
             if (Vector3.Distance(transform.position,cardTarget) < 0.15f)
             {
+                //Destory card
                 gameController.SelectedCard = null;
                 Destroy(this.gameObject);
             }
         }
 
+        //Constantly change sprite to card value
         ChangeSprite(cardNum);
     }
 
@@ -127,6 +142,7 @@ public class CardController : CardRenderer
     {
         spriteRenderer.sprite = spriteArray[num];
 
+        //If the card is an ace of diamonds, set its cost to 5
         if (num == 14)
         {
             cardCost = 5;
@@ -140,8 +156,10 @@ public class CardController : CardRenderer
     /// <param name="pos">Position to float towards</param>
     public void MoveTo(Vector3 pos)
     {
+        //If the card is not temporary
         if (!temporary)
         {
+            //Remove the card from the hand
             gameController.Hand.Remove(cardNum);
             cardTarget = new Vector3(pos.x, pos.y - 0.25f, pos.z);
         }
@@ -158,10 +176,13 @@ public class CardController : CardRenderer
     /// </summary>
     private void OnMouseDown()
     {
+        //If clicked when not selected, select the card
         if (gameController.playerTurn && gameController.SelectedCard != this)
         {
             gameController.SelectedCard = this;
         }
+
+        //If clicked when selected, unselect the card
         else if (gameController.SelectedCard == this)
         {
             gameController.SelectedCard = null;

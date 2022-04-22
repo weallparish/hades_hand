@@ -4,25 +4,64 @@ using UnityEngine;
 
 public class DrawPile : MonoBehaviour
 {
+    /// <summary>
+    /// Cards currently in deck
+    /// </summary>
     private List<int> deckCards;
 
+    /// <summary>
+    /// Most recent card drawn
+    /// </summary>
     private int cardDrawn;
+
+    /// <summary>
+    /// Suite level of deck
+    /// </summary>
     private int deckLevel;
 
+    /// <summary>
+    /// Prefab of card to spawn
+    /// </summary>
     [SerializeField]
     private GameObject cardPrefab;
+
+    /// <summary>
+    /// Discard pile to reshuffle from
+    /// </summary>
     [SerializeField]
     private SlotController discardPile;
 
+    /// <summary>
+    /// Collider of game object
+    /// </summary>
     private BoxCollider2D boxCollider;
+
+    /// <summary>
+    /// Renderers of child game objects
+    /// </summary>
     private SpriteRenderer[] renderers;
+
+    /// <summary>
+    /// Game controller running the entire game
+    /// </summary>
     private GameController gameController;
+
+    /// <summary>
+    /// Width of deck (how thick it is)
+    /// </summary>
     private GameObject deckWidth;
+
+    /// <summary>
+    /// Hand to spawn cards inside of
+    /// </summary>
     private GameObject hand;
 
-    // Start is called before the first frame update
+    /// <summary>
+    /// Called before the first frame update
+    /// </summary>
     void Start()
     {
+        //Set default values
         boxCollider = GetComponent<BoxCollider2D>();
         renderers = GetComponentsInChildren<SpriteRenderer>();
         gameController = FindObjectOfType<GameController>();
@@ -32,6 +71,7 @@ public class DrawPile : MonoBehaviour
         deckLevel = 1;
         cardDrawn = 0;
 
+        //Reset cards in deck
         deckCards = new List<int>();
 
         for (int i = 1; i < 13; i++)
@@ -41,9 +81,12 @@ public class DrawPile : MonoBehaviour
         deckCards.Add(14);
     }
 
-    // Update is called once per frame
+    /// <summary>
+    /// Called once per frame
+    /// </summary>
     void Update()
     {
+        //
         float xPos = (float)(-0.56 + ((13 - deckCards.Count + 2) / gameController.Level * 0.01));
         deckWidth.transform.localPosition = new Vector3(xPos, deckWidth.transform.localPosition.y, deckWidth.transform.localPosition.z);
 
@@ -96,11 +139,18 @@ public class DrawPile : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns>cardDrawn</returns>
     public int getCardDrawn()
     {
         return cardDrawn;
     }
 
+    /// <summary>
+    /// Draws a card from the deck
+    /// </summary>
     public void DrawCard()
     {
         cardDrawn = deckCards[Random.Range(0, deckCards.Count)];
@@ -120,6 +170,9 @@ public class DrawPile : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Activated when sprite is clicked on
+    /// </summary>
     private void OnMouseDown()
     {
         if (gameController.Draws > 0 && gameController.Hand.Count < 7 && gameController.playerTurn)

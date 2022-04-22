@@ -16,31 +16,18 @@ public class CardRenderer : MonoBehaviour
     public Sprite[] spriteArray;
 
     /// <summary>
-    /// Called before the first frame
-    /// </summary>
-    void Start()
-    {
-
-    }
-
-    /// <summary>
     /// Sets default values for sprite renderer and loads sprites
     /// </summary>
     public void Setup()
     {
+        //Get sprite renderer of attached game object
         spriteRenderer = gameObject.GetComponentInChildren<SpriteRenderer>();
-
+        
+        //Find all addressables in "cardsLarge_tilemap"
         AsyncOperationHandle<Sprite[]> spriteHandler = Addressables.LoadAssetAsync<Sprite[]>("Assets/Sprites/cardsLarge_tilemap.png");
 
+        //Once completed, load sprites
         spriteHandler.Completed += LoadSprites;
-    }
-
-    /// <summary>
-    /// Called once per frame
-    /// </summary>
-    void Update()
-    {
-        
     }
 
     /// <summary>
@@ -49,6 +36,7 @@ public class CardRenderer : MonoBehaviour
     /// <param name="handleToCheck"></param>
     private void LoadSprites(AsyncOperationHandle<Sprite[]> handleToCheck)
     {
+        //Add loaded sprites to spriteArray
         if (handleToCheck.Status == AsyncOperationStatus.Succeeded)
         {
             spriteArray = handleToCheck.Result;
@@ -61,6 +49,7 @@ public class CardRenderer : MonoBehaviour
     /// <param name="num">Value of sprite to change to</param>
     private void ChangeSprite(int num)
     {
+        //Set sprite to item "num" in array
         spriteRenderer.sprite = spriteArray[num];
     }
 }
