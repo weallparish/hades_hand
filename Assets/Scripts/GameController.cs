@@ -32,12 +32,22 @@ public class GameController : MonoBehaviour
     /// <summary>
     /// Current cards in enemy's deck
     /// </summary>
-    public List<int> EnemyDeck;
+    private List<int> EnemyDeck;
+
+    /// <summary>
+    /// Current cards in enemy's discard pile
+    /// </summary>
+    private List<int> EnemyDiscard;
 
     /// <summary>
     /// Enemy slot controllers in enemy field
     /// </summary>
-    public EnemySlotController[] EnemySlots;
+    private EnemySlotController[] EnemySlots;
+
+    /// <summary>
+    /// Level of the enemy's deck
+    /// </summary>
+    private int EnemyDeckLevel;
 
     /// <summary>
     /// The highest value of card the player can currently play
@@ -190,6 +200,7 @@ public class GameController : MonoBehaviour
         spadeSprite = spadeCard.GetComponent<SpriteRenderer>();
 
         EnemySlots = FindObjectsOfType<EnemySlotController>();
+        EnemyDeckLevel = 1;
 
         //Add listener to pass button
         passButton.onClick.AddListener(PassTurn);
@@ -204,22 +215,25 @@ public class GameController : MonoBehaviour
     void Update()
     {
         //If level >= 2, display diamond sprite
-        if (Level >= 2)
+        if (Level >= 2 && EnemyDeckLevel < 2)
         {
             diamondSprite.sprite = diamondImg;
+            EnemyDeckLevel = 2;
         }
         
         //If level >= 3, display club sprite
-        if (Level >= 3)
+        if (Level >= 3 && EnemyDeckLevel < 3)
         {
             clubSprite.sprite = clubImg;
             maxPlayable = 28;
+            EnemyDeckLevel = 3;
         }
 
         //If level >= 4, display spade sprite
-        if (Level >= 4)
+        if (Level >= 4 && EnemyDeckLevel < 4)
         {
             spadeSprite.sprite = spadeImg;
+            EnemyDeckLevel = 4;
         }
 
         spCounter.text = "SPs: " + SacrificePoints;
@@ -261,14 +275,9 @@ public class GameController : MonoBehaviour
     private void EnemyTurn()
     {
         //Recalibrate values of enemy field
-        EnemyField.Clear();
-
-        EnemySlots = FindObjectsOfType<EnemySlotController>();
-
-        foreach (EnemySlotController slot in EnemySlots)
-        {
-            EnemyField.Add(slot.GetCardNum());
-        }
+        print("Field calibrating");
+        RecalibrateField();
+        print("Field recalibrated");
 
         //If an enemy field slot is empty, play a new card
         if (EnemyField.Contains(-1))
@@ -277,6 +286,8 @@ public class GameController : MonoBehaviour
 
             EnemySlots[EnemyField.LastIndexOf(-1)].SetCardNum(EnemyDeck[cardChosen]);
             EnemyDeck.RemoveAt(cardChosen);
+
+
         }
 
         PlayerTurn();
@@ -288,14 +299,7 @@ public class GameController : MonoBehaviour
     private void PlayerTurn()
     {
         //Recalibrate cards in enemy field
-        EnemyField.Clear();
-
-        EnemySlots = FindObjectsOfType<EnemySlotController>();
-
-        foreach (EnemySlotController slot in EnemySlots)
-        {
-            EnemyField.Add(slot.GetCardNum());
-        }
+        RecalibrateField();
 
         //Reset player values
         Draws = DrawsMax;
@@ -355,6 +359,21 @@ public class GameController : MonoBehaviour
     }
 
     /// <summary>
+    /// Reload which cards are in the enemy field
+    /// </summary>
+    public void RecalibrateField()
+    {
+        EnemyField.Clear();
+
+        EnemySlots = FindObjectsOfType<EnemySlotController>();
+
+        foreach (EnemySlotController slot in EnemySlots)
+        {
+            EnemyField.Add(slot.GetCardNum());
+        }
+    }
+
+    /// <summary>
     /// Controls the enemy block
     /// </summary>
     /// <param name="attackNum">Value that enemy is being attacked with</param>
@@ -372,6 +391,7 @@ public class GameController : MonoBehaviour
                 {
                     if (slot.GetCardNum() == FindSmallest(EnemyField))
                     {
+                        EnemyDiscard.Add(slot.GetCardNum());
                         slot.SetCardNum(-1);
                         return FindSmallest(EnemyField);
                     }

@@ -454,8 +454,8 @@ MonoBehaviour:
   slotLimit: 999
   isEditable: 0
   cardPrefab: {fileID: 0}
+  discardPile: {fileID: 0}
   cards: 
-  isSelected: 0
 --- !u!212 &173710977
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -570,6 +570,7 @@ MonoBehaviour:
   Hand: 
   EnemyField: 
   EnemyDeck: 
+  EnemyDiscard: 
   EnemySlots: []
   maxPlayable: 0
   playerTurn: 1
@@ -590,7 +591,6 @@ MonoBehaviour:
   healthCounter: {fileID: 926906009}
   enemyCounter: {fileID: 1235696661}
   passButton: {fileID: 1928282302}
-  attackButton: {fileID: 1560331003}
 --- !u!1 &209025338
 GameObject:
   m_ObjectHideFlags: 0
@@ -898,8 +898,8 @@ MonoBehaviour:
   slotLimit: 1
   isEditable: 1
   cardPrefab: {fileID: 6522180245832288008, guid: 6d1efbaa8a2e48f4ba0759b1651d1d34, type: 3}
+  discardPile: {fileID: 173710976}
   cards: 
-  isSelected: 0
 --- !u!212 &558933731
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -2222,8 +2222,8 @@ MonoBehaviour:
   slotLimit: 1
   isEditable: 1
   cardPrefab: {fileID: 6522180245832288008, guid: 6d1efbaa8a2e48f4ba0759b1651d1d34, type: 3}
+  discardPile: {fileID: 173710976}
   cards: 
-  isSelected: 0
 --- !u!212 &1109646834
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -2893,8 +2893,8 @@ MonoBehaviour:
   slotLimit: 1
   isEditable: 1
   cardPrefab: {fileID: 6522180245832288008, guid: 6d1efbaa8a2e48f4ba0759b1651d1d34, type: 3}
+  discardPile: {fileID: 173710976}
   cards: 
-  isSelected: 0
 --- !u!61 &1460229890
 BoxCollider2D:
   m_ObjectHideFlags: 0

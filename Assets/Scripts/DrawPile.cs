@@ -86,10 +86,11 @@ public class DrawPile : MonoBehaviour
     /// </summary>
     void Update()
     {
-        //
+        //Adjust thickness of the deck based on amount of cards left
         float xPos = (float)(-0.56 + ((13 - deckCards.Count + 2) / gameController.Level * 0.01));
         deckWidth.transform.localPosition = new Vector3(xPos, deckWidth.transform.localPosition.y, deckWidth.transform.localPosition.z);
 
+        //If there are cards in the deck, reenable the collider to draw new cards
         if (boxCollider.enabled == false && deckCards.Count > 0)
         {
             boxCollider.enabled = true;
@@ -100,6 +101,7 @@ public class DrawPile : MonoBehaviour
             }
         }
 
+        //Add diamond cards to deck when level 2 is reached
         if (gameController.Level == 2 && deckLevel < 2)
         {
             for (int i = 15; i < 27; i++)
@@ -117,6 +119,7 @@ public class DrawPile : MonoBehaviour
             deckLevel = 2;
         }
 
+        //Add club cards to deck when level 3 is reached
         if (gameController.Level == 3 && deckLevel < 3)
         {
             for (int i = 29; i < 41; i++)
@@ -128,6 +131,7 @@ public class DrawPile : MonoBehaviour
             deckLevel = 3;
         }
 
+        //Add spade cards to the deck when level 4 is reached
         if (gameController.Level == 4 && deckLevel < 4)
         {
             for (int i = 43; i < 55; i++)
@@ -153,12 +157,20 @@ public class DrawPile : MonoBehaviour
     /// </summary>
     public void DrawCard()
     {
+        //Pick random card from deck
         cardDrawn = deckCards[Random.Range(0, deckCards.Count)];
+
+        //Remove that card from the deck
         deckCards.Remove(cardDrawn);
+
+        //Add the drawn card to the player's hand
         gameController.Hand.Add(cardDrawn);
+
+        //Instantiate new card object
         GameObject card = Instantiate(cardPrefab, new Vector3(gameController.Hand.Count - 4, (float)-4.5, (float)(-4 - (gameController.Hand.Count - 4)) / 100), Quaternion.identity, hand.transform);
         card.GetComponent<CardController>().setCardNum(cardDrawn);
 
+        //If the deck has no more cards, disable the collider and renderers
         if (deckCards.Count < 1)
         {
             boxCollider.enabled = false;

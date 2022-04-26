@@ -36,6 +36,12 @@ public class SlotController : CardRenderer
     private GameObject cardPrefab;
 
     /// <summary>
+    /// Game Object storing the discard pile
+    /// </summary>
+    [SerializeField]
+    private SlotController discardPile;
+
+    /// <summary>
     /// List of cards contained in slot
     /// </summary>
     public List<int> cards;
@@ -290,6 +296,14 @@ public class SlotController : CardRenderer
         }
     }
 
+    public void AddCards(List<int> list)
+    {
+        foreach (int i in list)
+        {
+            cards.Add(i);
+        }
+    }
+
     /// <summary>
     /// Deals damage to enemy and gives enemy a chance to block
     /// </summary>
@@ -314,9 +328,12 @@ public class SlotController : CardRenderer
             //If the card the enemy blocked with had a higher value, destroy current card
             else if (blockCard >= cards[0])
             {
+                discardPile.AddCards(cards);
                 cards.Clear();
             }
         }
+
+        gameController.RecalibrateField();
     }
 
 }
