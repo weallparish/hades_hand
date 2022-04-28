@@ -167,7 +167,7 @@ public class DrawPile : MonoBehaviour
         gameController.Hand.Add(cardDrawn);
 
         //Instantiate new card object
-        GameObject card = Instantiate(cardPrefab, new Vector3(gameController.Hand.Count - 4, (float)-4.5, (float)(-4 - (gameController.Hand.Count - 4)) / 100), Quaternion.identity, hand.transform);
+        GameObject card = Instantiate(cardPrefab, gameObject.transform.position, Quaternion.identity, hand.transform);
         card.GetComponent<CardController>().setCardNum(cardDrawn);
 
         //If the deck has no more cards, disable the collider and renderers

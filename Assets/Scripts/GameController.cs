@@ -25,6 +25,16 @@ public class GameController : MonoBehaviour
     public List<int> Hand;
 
     /// <summary>
+    /// Current cards in player's field
+    /// </summary>
+    public List<int> PlayerField;
+
+    /// <summary>
+    /// Value of most recent enemy attack
+    /// </summary>
+    public int EnemyAttackValue;
+
+    /// <summary>
     /// Current cards in enemy's field
     /// </summary>
     public List<int> EnemyField;
@@ -37,7 +47,7 @@ public class GameController : MonoBehaviour
     /// <summary>
     /// Current cards in enemy's discard pile
     /// </summary>
-    private List<int> EnemyDiscard;
+    public List<int> EnemyDiscard;
 
     /// <summary>
     /// Enemy slot controllers in enemy field
@@ -58,6 +68,11 @@ public class GameController : MonoBehaviour
     /// Whether or not it is the player's turn
     /// </summary>
     public bool playerTurn = false;
+
+    /// <summary>
+    /// Whether or not the player can block
+    /// </summary>
+    public bool canBlock = false;
 
     /// <summary>
     /// The turn number of the round
@@ -153,7 +168,6 @@ public class GameController : MonoBehaviour
     /// <summary>
     /// Main draw pile
     /// </summary>
-    [SerializeField]
     private DrawPile drawPile;
 
     /// <summary>
@@ -181,6 +195,24 @@ public class GameController : MonoBehaviour
     private UnityEngine.UI.Button passButton;
 
     /// <summary>
+    /// Attack Button Text for slot 1
+    /// </summary>
+    [SerializeField]
+    private TMPro.TextMeshProUGUI attackButton1;
+
+    /// <summary>
+    /// Attack Button Text for slot 2
+    /// </summary>
+    [SerializeField]
+    private TMPro.TextMeshProUGUI attackButton2;
+
+    /// <summary>
+    /// Attack Button Text vfor slot 3
+    /// </summary>
+    [SerializeField]
+    private TMPro.TextMeshProUGUI attackButton3;
+
+    /// <summary>
     /// Called before first frame
     /// </summary>
     void Start()
@@ -198,6 +230,8 @@ public class GameController : MonoBehaviour
         diamondSprite = diamondCard.GetComponent<SpriteRenderer>();
         clubSprite = clubCard.GetComponent<SpriteRenderer>();
         spadeSprite = spadeCard.GetComponent<SpriteRenderer>();
+
+        drawPile = FindObjectOfType<DrawPile>();
 
         EnemySlots = FindObjectsOfType<EnemySlotController>();
         EnemyDeckLevel = 1;
@@ -220,7 +254,7 @@ public class GameController : MonoBehaviour
             diamondSprite.sprite = diamondImg;
             EnemyDeckLevel = 2;
         }
-        
+
         //If level >= 3, display club sprite
         if (Level >= 3 && EnemyDeckLevel < 3)
         {
@@ -234,6 +268,19 @@ public class GameController : MonoBehaviour
         {
             spadeSprite.sprite = spadeImg;
             EnemyDeckLevel = 4;
+        }
+
+        if (playerTurn)
+        {
+            attackButton1.text = "Attack";
+            attackButton2.text = "Attack";
+            attackButton3.text = "Attack";
+        }
+        else
+        {
+            attackButton1.text = "Block";
+            attackButton2.text = "Block";
+            attackButton3.text = "Block";
         }
 
         spCounter.text = "SPs: " + SacrificePoints;
@@ -257,10 +304,10 @@ public class GameController : MonoBehaviour
         PlayerHealth = 5;
         EnemyHealth = 5;
 
-        EnemyDeck = new List<int> {0,1,2,3,4,5,6,7,8,9,10,11,12};
+        EnemyDeck = new List<int> { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 };
 
         //Draw cards into player's hand
-        for (int i=0; i<3; i++)
+        for (int i = 0; i < 3; i++)
         {
             drawPile.DrawCard();
             yield return new WaitForSeconds(0.1f);
@@ -272,7 +319,7 @@ public class GameController : MonoBehaviour
     /// <summary>
     /// Controls the enemy's turn. Draws and plays cards.
     /// </summary>
-    private void EnemyTurn()
+    private IEnumerator EnemyTurn()
     {
         //Recalibrate values of enemy field
         print("Field calibrating");
@@ -280,14 +327,27 @@ public class GameController : MonoBehaviour
         print("Field recalibrated");
 
         //If an enemy field slot is empty, play a new card
-        if (EnemyField.Contains(-1))
+        if (EnemyField.Contains(-1) && EnemyDeck.Count > 0)
         {
-            int cardChosen = Random.Range(0,EnemyDeck.Count);
+            int cardChosen = Random.Range(0, EnemyDeck.Count);
 
             EnemySlots[EnemyField.LastIndexOf(-1)].SetCardNum(EnemyDeck[cardChosen]);
             EnemyDeck.RemoveAt(cardChosen);
+        }
 
+        List<int> cardsGreater = FindGreater(EnemyField, FindGreatest(PlayerField));
 
+        if (cardsGreater.Count != 0)
+        {
+            foreach (int i in cardsGreater)
+            {
+                EnemyAttackValue = FindGreatest(EnemyField);
+                canBlock = true;
+
+                print("waiting");
+                yield return new WaitUntil(() => canBlock == false);
+                print("done");
+            }
         }
 
         PlayerTurn();
@@ -313,8 +373,16 @@ public class GameController : MonoBehaviour
     /// </summary>
     private void PassTurn()
     {
-        playerTurn = false;
-        EnemyTurn();
+        if (playerTurn)
+        {
+            playerTurn = false;
+            StartCoroutine(EnemyTurn());
+        }
+        else if (canBlock)
+        {
+            canBlock = false;
+            PlayerHealth--;
+        }
     }
 
     /// <summary>
@@ -358,6 +426,21 @@ public class GameController : MonoBehaviour
         return smallestVal;
     }
 
+    private int FindGreatest(List<int> list)
+    {
+        int largestVal = 0;
+
+        foreach (int i in list)
+        {
+            if (i > largestVal && i > -1)
+            {
+                largestVal = i;
+            }
+        }
+
+        return largestVal;
+    }
+
     /// <summary>
     /// Reload which cards are in the enemy field
     /// </summary>
@@ -370,6 +453,15 @@ public class GameController : MonoBehaviour
         foreach (EnemySlotController slot in EnemySlots)
         {
             EnemyField.Add(slot.GetCardNum());
+        }
+
+        PlayerField.Clear();
+
+        SlotController[] PlayerSlots = FindObjectsOfType<SlotController>();
+
+        foreach (SlotController slot in PlayerSlots)
+        {
+            PlayerField.Add(slot.GetCardNum());
         }
     }
 
@@ -391,6 +483,7 @@ public class GameController : MonoBehaviour
                 {
                     if (slot.GetCardNum() == FindSmallest(EnemyField))
                     {
+                        print("Destroy card");
                         EnemyDiscard.Add(slot.GetCardNum());
                         slot.SetCardNum(-1);
                         return FindSmallest(EnemyField);
@@ -411,4 +504,5 @@ public class GameController : MonoBehaviour
             return FindSmallest(cardsGreater);
         }
     }
+
 }

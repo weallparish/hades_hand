@@ -304,32 +304,64 @@ public class SlotController : CardRenderer
         }
     }
 
+    public int GetCardNum()
+    {
+        if (cards.Count > 0)
+        {
+            return cards[cards.Count - 1];
+        }
+        else
+        {
+            return -1;
+        }
+    }
+
     /// <summary>
     /// Deals damage to enemy and gives enemy a chance to block
     /// </summary>
     public void Attack()
     {
-        //If the slot is able to attack
-        if (cards.Count > 0 && !summonSick)
+        if (gameController.playerTurn)
         {
-            //Allow enemy to try to block attack
-            int blockCard = gameController.EnemyBlock(cards[cards.Count - 1]);
-
-            //Cause summon sickness
-            summonSick = true;
-            turnPlayed = gameController.turnNum;
-
-            //If the enemy didn't block, deal damage to the enemy
-            if (blockCard == -1)
+            print("Attack");
+            //If the slot is able to attack
+            if (cards.Count > 0 && !summonSick)
             {
-                gameController.EnemyHealth--;
+                //Allow enemy to try to block attack
+                int blockCard = gameController.EnemyBlock(cards[cards.Count - 1]);
+
+                //Cause summon sickness
+                summonSick = true;
+                turnPlayed = gameController.turnNum;
+
+                //If the enemy didn't block, deal damage to the enemy
+                if (blockCard == -1)
+                {
+                    gameController.EnemyHealth--;
+                }
+
+                //If the card the enemy blocked with had a higher value, destroy current card
+                else if (blockCard >= cards[cards.Count -1])
+                {
+                    discardPile.AddCards(cards);
+                    cards.Clear();
+                }
             }
-
-            //If the card the enemy blocked with had a higher value, destroy current card
-            else if (blockCard >= cards[0])
+        }
+        else if (gameController.canBlock)
+        {
+            print("Block");
+            if (cards.Count > 0 && !summonSick)
             {
-                discardPile.AddCards(cards);
-                cards.Clear();
+
+                //If the card the enemy blocked with had a higher value, destroy current card
+                if (cards[cards.Count-1] <= gameController.EnemyAttackValue)
+                {
+                    discardPile.AddCards(cards);
+                    cards.Clear();
+                }
+
+                gameController.canBlock = false;
             }
         }
 
