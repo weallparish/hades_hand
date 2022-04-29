@@ -198,19 +198,19 @@ public class GameController : MonoBehaviour
     /// Attack Button Text for slot 1
     /// </summary>
     [SerializeField]
-    private TMPro.TextMeshProUGUI attackButton1;
+    private UnityEngine.UI.Button attackButton1;
 
     /// <summary>
     /// Attack Button Text for slot 2
     /// </summary>
     [SerializeField]
-    private TMPro.TextMeshProUGUI attackButton2;
+    private UnityEngine.UI.Button attackButton2;
 
     /// <summary>
     /// Attack Button Text vfor slot 3
     /// </summary>
     [SerializeField]
-    private TMPro.TextMeshProUGUI attackButton3;
+    private UnityEngine.UI.Button attackButton3;
 
     /// <summary>
     /// Called before first frame
@@ -272,15 +272,61 @@ public class GameController : MonoBehaviour
 
         if (playerTurn)
         {
-            attackButton1.text = "Attack";
-            attackButton2.text = "Attack";
-            attackButton3.text = "Attack";
+            attackButton1.GetComponentInChildren<TMPro.TextMeshProUGUI>().SetText("Attack");
+            attackButton2.GetComponentInChildren<TMPro.TextMeshProUGUI>().SetText("Attack");
+            attackButton3.GetComponentInChildren<TMPro.TextMeshProUGUI>().SetText("Attack");
+
+            passButton.GetComponentInChildren<TMPro.TextMeshProUGUI>().SetText("End Turn");
+            passButton.gameObject.SetActive(true);
+
+            UnityEngine.UI.ColorBlock colors = attackButton1.colors;
+            colors.normalColor = new Color32(210, 80, 80, 255);
+            colors.highlightedColor = new Color32(112, 40, 40, 255);
+            colors.selectedColor = Color.white;
+
+            attackButton1.colors = colors;
+            attackButton2.colors = colors;
+            attackButton3.colors = colors;
+
+            colors = passButton.colors;
+            colors.normalColor = new Color32(176, 98, 191, 255);
+            colors.highlightedColor = new Color32(126, 69, 138, 255);
+            colors.selectedColor = Color.white;
+
+            passButton.colors = colors;
         }
         else
         {
-            attackButton1.text = "Block";
-            attackButton2.text = "Block";
-            attackButton3.text = "Block";
+            attackButton1.GetComponentInChildren<TMPro.TextMeshProUGUI>().SetText("Block");
+            attackButton2.GetComponentInChildren<TMPro.TextMeshProUGUI>().SetText("Block");
+            attackButton3.GetComponentInChildren<TMPro.TextMeshProUGUI>().SetText("Block");
+
+            passButton.GetComponentInChildren<TMPro.TextMeshProUGUI>().SetText("Skip Block");
+
+            if (!canBlock)
+            {
+                passButton.gameObject.SetActive(false);
+            }
+            else
+            {
+                passButton.gameObject.SetActive(true);
+            }
+
+            UnityEngine.UI.ColorBlock colors = attackButton1.colors;
+            colors.normalColor = new Color32(100, 83, 212, 255);
+            colors.highlightedColor = new Color32(62, 52, 128, 255);
+            colors.selectedColor = Color.white;
+
+            attackButton1.colors = colors;
+            attackButton2.colors = colors;
+            attackButton3.colors = colors;
+
+            colors = passButton.colors;
+            colors.normalColor = new Color32(207, 133, 68, 255);
+            colors.highlightedColor = new Color32(168, 107, 54, 255);
+            colors.selectedColor = Color.white;
+
+            passButton.colors = colors;
         }
 
         spCounter.text = "SPs: " + SacrificePoints;
@@ -461,7 +507,10 @@ public class GameController : MonoBehaviour
 
         foreach (SlotController slot in PlayerSlots)
         {
-            PlayerField.Add(slot.GetCardNum());
+            if (slot.getIsEditable())
+            {
+                PlayerField.Add(slot.GetCardNum());
+            }
         }
     }
 

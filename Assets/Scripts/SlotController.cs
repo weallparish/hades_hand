@@ -61,6 +61,12 @@ public class SlotController : CardRenderer
     /// </summary>
     private bool summonSick = false;
 
+    /// <summary>
+    /// Attack button connected to card slot
+    /// </summary>
+    [SerializeField]
+    private UnityEngine.UI.Button connectedButton;
+
    /// <summary>
    /// Called before the first frame
    /// </summary>
@@ -130,6 +136,15 @@ public class SlotController : CardRenderer
         if (gameController.turnNum > turnPlayed)
         {
             summonSick = false;
+        }
+
+        if (cards.Count > 0  && !summonSick && (gameController.playerTurn || gameController.canBlock))
+        {
+            connectedButton.gameObject.SetActive(true);
+        }
+        else
+        {
+            connectedButton.gameObject.SetActive(false);
         }
     }
 
@@ -366,6 +381,11 @@ public class SlotController : CardRenderer
         }
 
         gameController.RecalibrateField();
+    }
+
+    public bool getIsEditable()
+    {
+        return isEditable;
     }
 
 }

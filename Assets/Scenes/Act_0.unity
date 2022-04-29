@@ -456,6 +456,7 @@ MonoBehaviour:
   cardPrefab: {fileID: 0}
   discardPile: {fileID: 0}
   cards: 
+  connectedButton: {fileID: 0}
 --- !u!212 &173710977
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -591,9 +592,9 @@ MonoBehaviour:
   healthCounter: {fileID: 926906009}
   enemyCounter: {fileID: 1235696661}
   passButton: {fileID: 1928282302}
-  attackButton1: {fileID: 209025340}
-  attackButton2: {fileID: 146127306}
-  attackButton3: {fileID: 662054878}
+  attackButton1: {fileID: 1560331003}
+  attackButton2: {fileID: 1635702144}
+  attackButton3: {fileID: 626434210}
 --- !u!1 &209025338
 GameObject:
   m_ObjectHideFlags: 0
@@ -903,6 +904,7 @@ MonoBehaviour:
   cardPrefab: {fileID: 6522180245832288008, guid: 6d1efbaa8a2e48f4ba0759b1651d1d34, type: 3}
   discardPile: {fileID: 173710976}
   cards: 
+  connectedButton: {fileID: 626434210}
 --- !u!212 &558933731
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -1061,7 +1063,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.8962264, g: 0.5284354, b: 0.5418729, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 0
@@ -1369,7 +1371,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Pass
+  m_text: Pass Turn
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -1396,8 +1398,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 24
-  m_fontSizeBase: 24
+  m_fontSize: 18
+  m_fontSizeBase: 18
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -2227,6 +2229,7 @@ MonoBehaviour:
   cardPrefab: {fileID: 6522180245832288008, guid: 6d1efbaa8a2e48f4ba0759b1651d1d34, type: 3}
   discardPile: {fileID: 173710976}
   cards: 
+  connectedButton: {fileID: 1635702144}
 --- !u!212 &1109646834
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -2899,6 +2902,7 @@ MonoBehaviour:
   cardPrefab: {fileID: 6522180245832288008, guid: 6d1efbaa8a2e48f4ba0759b1651d1d34, type: 3}
   discardPile: {fileID: 173710976}
   cards: 
+  connectedButton: {fileID: 1560331003}
 --- !u!61 &1460229890
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -3004,7 +3008,7 @@ MonoBehaviour:
   m_Transition: 1
   m_Colors:
     m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
-    m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
+    m_HighlightedColor: {r: 1, g: 1, b: 1, a: 1}
     m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
     m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
     m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
@@ -3051,7 +3055,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.8962264, g: 0.5284354, b: 0.5418729, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 0
@@ -3216,7 +3220,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.8962264, g: 0.5284354, b: 0.5418729, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 0
@@ -3466,8 +3470,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -229, y: -198}
-  m_SizeDelta: {x: 80, y: 30}
+  m_AnchoredPosition: {x: -227, y: -198}
+  m_SizeDelta: {x: 100, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1928282302
 MonoBehaviour:
@@ -3525,7 +3529,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.5154415, g: 0.7888667, b: 0.9339623, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
