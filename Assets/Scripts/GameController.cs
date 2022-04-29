@@ -291,7 +291,7 @@ public class GameController : MonoBehaviour
             colors = passButton.colors;
             colors.normalColor = new Color32(176, 98, 191, 255);
             colors.highlightedColor = new Color32(126, 69, 138, 255);
-            colors.selectedColor = Color.white;
+            colors.selectedColor = new Color32(176, 98, 191, 255);
 
             passButton.colors = colors;
         }
@@ -324,7 +324,7 @@ public class GameController : MonoBehaviour
             colors = passButton.colors;
             colors.normalColor = new Color32(207, 133, 68, 255);
             colors.highlightedColor = new Color32(168, 107, 54, 255);
-            colors.selectedColor = Color.white;
+            colors.selectedColor = new Color32(100, 83, 212, 255);
 
             passButton.colors = colors;
         }

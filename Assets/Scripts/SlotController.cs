@@ -11,6 +11,8 @@ public class SlotController : CardRenderer
     /// </summary>
     private GameController gameController;
 
+    private Animator animator;
+
     /// <summary>
     /// Sprite to render the lack of a card
     /// </summary>
@@ -82,6 +84,9 @@ public class SlotController : CardRenderer
         //Find game controller
         gameController = FindObjectOfType<GameController>();
 
+        //Find animator
+        animator = GetComponent<Animator>();
+
     }
 
     /// <summary>
@@ -146,6 +151,21 @@ public class SlotController : CardRenderer
         {
             connectedButton.gameObject.SetActive(false);
         }
+
+        if (summonSick)
+        {
+            if (!animator.GetBool("SummonSick"))
+            {
+                animator.SetBool("SummonSick", true);
+            }
+        }
+        else
+        {
+            if (animator.GetBool("SummonSick"))
+            {
+                animator.SetBool("SummonSick", false);
+            }
+        }
     }
 
     /// <summary>
@@ -188,10 +208,6 @@ public class SlotController : CardRenderer
                         gameController.SacrificePoints -= gameController.SelectedCard.getCost();
                         gameController.Plays -= 1;
 
-                        //Start summon sickness
-                        summonSick = true;
-                        turnPlayed = gameController.turnNum;
-
                         //Activate ability (such as ace or spell)
                         StartCoroutine(ActivateAbility());
                     }
@@ -231,10 +247,6 @@ public class SlotController : CardRenderer
                         //Remove sacrifice points and plays
                         gameController.SacrificePoints -= gameController.SelectedCard.getCost();
                         gameController.Plays -= 1;
-
-                        //Begin summon sickness
-                        summonSick = true;
-                        turnPlayed = gameController.turnNum;
 
                         //Acivate card ability (such as ace or spell)
                         StartCoroutine(ActivateAbility());
@@ -309,6 +321,13 @@ public class SlotController : CardRenderer
             cards.Clear();
             ChangeSprite(-1);
         }
+
+        else
+        {
+            //Start summon sickness
+            summonSick = true;
+            turnPlayed = gameController.turnNum;
+        }
     }
 
     public void AddCards(List<int> list)
@@ -321,7 +340,7 @@ public class SlotController : CardRenderer
 
     public int GetCardNum()
     {
-        if (cards.Count > 0)
+        if (cards.Count > 0 && !summonSick)
         {
             return cards[cards.Count - 1];
         }
@@ -345,14 +364,15 @@ public class SlotController : CardRenderer
                 //Allow enemy to try to block attack
                 int blockCard = gameController.EnemyBlock(cards[cards.Count - 1]);
 
-                //Cause summon sickness
-                summonSick = true;
-                turnPlayed = gameController.turnNum;
 
                 //If the enemy didn't block, deal damage to the enemy
                 if (blockCard == -1)
                 {
                     gameController.EnemyHealth--;
+
+                    //Cause summon sickness
+                    summonSick = true;
+                    turnPlayed = gameController.turnNum;
                 }
 
                 //If the card the enemy blocked with had a higher value, destroy current card
@@ -360,6 +380,13 @@ public class SlotController : CardRenderer
                 {
                     discardPile.AddCards(cards);
                     cards.Clear();
+                }
+
+                else
+                {
+                    //Cause summon sickness
+                    summonSick = true;
+                    turnPlayed = gameController.turnNum;
                 }
             }
         }
