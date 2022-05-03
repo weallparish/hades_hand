@@ -390,6 +390,12 @@ public class GameController : MonoBehaviour
                 EnemyAttackValue = FindGreatest(EnemyField);
                 canBlock = true;
 
+                if (FindGreatest(PlayerField) <= 0)
+                {
+                    canBlock = false;
+                    PlayerHealth--;
+                }
+
                 print("waiting");
                 yield return new WaitUntil(() => canBlock == false);
                 print("done");
