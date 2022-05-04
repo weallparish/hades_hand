@@ -67,7 +67,7 @@ public class SlotController : CardRenderer
     /// Attack button connected to card slot
     /// </summary>
     [SerializeField]
-    private UnityEngine.UI.Button connectedButton;
+    private UnityEngine.UI.Button connectedButton = null;
 
    /// <summary>
    /// Called before the first frame
@@ -145,11 +145,17 @@ public class SlotController : CardRenderer
 
         if (cards.Count > 0  && !summonSick && (gameController.playerTurn || gameController.canBlock))
         {
-            connectedButton.gameObject.SetActive(true);
+            if (connectedButton != null)
+            {
+                connectedButton.gameObject.SetActive(true);
+            }
         }
         else
         {
-            connectedButton.gameObject.SetActive(false);
+            if (connectedButton != null)
+            {
+                connectedButton.gameObject.SetActive(false);
+            }
         }
 
         if (summonSick)

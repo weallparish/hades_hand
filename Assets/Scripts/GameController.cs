@@ -52,7 +52,7 @@ public class GameController : MonoBehaviour
     /// <summary>
     /// Enemy slot controllers in enemy field
     /// </summary>
-    private EnemySlotController[] EnemySlots;
+    private List<EnemySlotController> EnemySlots;
 
     /// <summary>
     /// Level of the enemy's deck
@@ -233,7 +233,13 @@ public class GameController : MonoBehaviour
 
         drawPile = FindObjectOfType<DrawPile>();
 
-        EnemySlots = FindObjectsOfType<EnemySlotController>();
+        EnemySlotController[] enemySlotControllers = FindObjectsOfType<EnemySlotController>();
+        foreach(EnemySlotController slot in enemySlotControllers)
+        {
+            Debug.Log(slot.GetCardNum());
+            EnemySlots.Add(slot);
+        }
+
         EnemyDeckLevel = 1;
 
         //Add listener to pass button
@@ -388,7 +394,22 @@ public class GameController : MonoBehaviour
             foreach (int i in cardsGreater)
             {
                 EnemyAttackValue = FindGreatest(EnemyField);
+                EnemySlotController AttackingCard = null;
+
+                foreach(EnemySlotController slot in EnemySlots)
+                {
+                    if (slot.GetCardNum() == EnemyAttackValue)
+                    {
+                        AttackingCard = slot;
+                        break;
+                    }
+                }
+
                 canBlock = true;
+
+
+                AttackingCard.GetAnimator().SetBool("Waiting", true);
+                
 
                 if (FindGreatest(PlayerField) <= 0)
                 {
@@ -396,9 +417,9 @@ public class GameController : MonoBehaviour
                     PlayerHealth--;
                 }
 
-                print("waiting");
                 yield return new WaitUntil(() => canBlock == false);
-                print("done");
+
+                AttackingCard.GetAnimator().SetBool("Waiting", false);
             }
         }
 
@@ -500,7 +521,11 @@ public class GameController : MonoBehaviour
     {
         EnemyField.Clear();
 
-        EnemySlots = FindObjectsOfType<EnemySlotController>();
+        EnemySlotController[] enemySlotControllers = FindObjectsOfType<EnemySlotController>();
+        foreach (EnemySlotController slot in enemySlotControllers)
+        {
+            EnemySlots.Add(slot);
+        }
 
         foreach (EnemySlotController slot in EnemySlots)
         {

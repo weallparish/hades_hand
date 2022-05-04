@@ -11,6 +11,8 @@ public class EnemySlotController : CardRenderer
     /// </summary>
     private GameController gameController;
 
+    private Animator animator;
+
     /// <summary>
     /// Card value of slot
     /// </summary>
@@ -35,6 +37,8 @@ public class EnemySlotController : CardRenderer
 
         //Set card value to -1 (empty sprite)
         cardNum = -1;
+
+        animator = GetComponent<Animator>();
     }
 
     /// <summary>
@@ -53,6 +57,15 @@ public class EnemySlotController : CardRenderer
     public int GetCardNum()
     {
         return cardNum;
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns>animator</returns>
+    public Animator GetAnimator()
+    {
+        return animator;
     }
 
     /// <summary>
