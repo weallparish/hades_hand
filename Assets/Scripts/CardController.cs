@@ -17,6 +17,8 @@ public class CardController : CardRenderer
     [SerializeField]
     private int cardNum = 0;
 
+    private SpriteRenderer spriteRenderer;
+
     /// <summary>
     /// Cost of the card (default of 0)
     /// </summary>
@@ -53,7 +55,15 @@ public class CardController : CardRenderer
         cardCost = 0;
 
         //Find animator
-        animator = gameObject.GetComponentInChildren<Animator>();
+        animator = GetComponentInChildren<Animator>();
+
+        //Find renderer
+        spriteRenderer = GetComponentInChildren<SpriteRenderer>();
+
+        if (temporary)
+        {
+            spriteRenderer.enabled = false;
+        }
     }
 
     /// <summary>
@@ -82,6 +92,8 @@ public class CardController : CardRenderer
         //If the hand does not contain the card and it isn't temporary
         else
         {
+            spriteRenderer.enabled = true;
+
             //Move towards the final position
             transform.position = Vector3.MoveTowards(transform.position, cardTarget, 0.1f);
 
@@ -143,7 +155,7 @@ public class CardController : CardRenderer
         spriteRenderer.sprite = spriteArray[num];
 
         //If the card is an ace of diamonds, set its cost to 5
-        if (num == 14)
+        if (num%14 == 0)
         {
             cardCost = 5;
         }

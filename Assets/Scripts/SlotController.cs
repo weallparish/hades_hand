@@ -125,6 +125,7 @@ public class SlotController : CardRenderer
         {
             //If there aren't any cards in the slot, change sprite to empty
             ChangeSprite(-1);
+            summonSick = false;
         }
 
         //If a card was played AND that card has the same value as the slot AND the slot is selected, remove that card and move it to the new slot

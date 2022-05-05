@@ -52,7 +52,12 @@ public class GameController : MonoBehaviour
     /// <summary>
     /// Enemy slot controllers in enemy field
     /// </summary>
-    private List<EnemySlotController> EnemySlots;
+    private EnemySlotController[] EnemySlots;
+
+    /// <summary>
+    /// Currently attacking card
+    /// </summary>
+    private EnemySlotController AttackingCard;
 
     /// <summary>
     /// Level of the enemy's deck
@@ -233,12 +238,7 @@ public class GameController : MonoBehaviour
 
         drawPile = FindObjectOfType<DrawPile>();
 
-        EnemySlotController[] enemySlotControllers = FindObjectsOfType<EnemySlotController>();
-        foreach(EnemySlotController slot in enemySlotControllers)
-        {
-            Debug.Log(slot.GetCardNum());
-            EnemySlots.Add(slot);
-        }
+        EnemySlots = FindObjectsOfType<EnemySlotController>();
 
         EnemyDeckLevel = 1;
 
@@ -348,6 +348,7 @@ public class GameController : MonoBehaviour
     {
         yield return new WaitForSeconds(1);
 
+        print("New Round");
         //Set default round values
         Draws = 0;
         Plays = PlaysMax;
@@ -356,7 +357,7 @@ public class GameController : MonoBehaviour
         PlayerHealth = 5;
         EnemyHealth = 5;
 
-        EnemyDeck = new List<int> { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 };
+        EnemyDeck = new List<int> { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 14 };
 
         //Draw cards into player's hand
         for (int i = 0; i < 3; i++)
@@ -374,17 +375,31 @@ public class GameController : MonoBehaviour
     private IEnumerator EnemyTurn()
     {
         //Recalibrate values of enemy field
-        print("Field calibrating");
         RecalibrateField();
-        print("Field recalibrated");
+
+        int cardChosen = Random.Range(0, EnemyDeck.Count - 1);
+        int smallestCard = FindSmallest(EnemyField);
+
+        EnemySlotController updatedSlot = null;
 
         //If an enemy field slot is empty, play a new card
         if (EnemyField.Contains(-1) && EnemyDeck.Count > 0)
         {
-            int cardChosen = Random.Range(0, EnemyDeck.Count);
-
-            EnemySlots[EnemyField.LastIndexOf(-1)].SetCardNum(EnemyDeck[cardChosen]);
+            updatedSlot = EnemySlots[EnemyField.LastIndexOf(-1)];
+            updatedSlot.SetCardNum(EnemyDeck[cardChosen]);
             EnemyDeck.RemoveAt(cardChosen);
+
+            StartCoroutine(ActivateAbility(updatedSlot));
+        }
+        else if (cardChosen > smallestCard)
+        {
+            EnemyDiscard.Add(smallestCard);
+
+            updatedSlot = EnemySlots[EnemyField.LastIndexOf(smallestCard)];
+            updatedSlot.SetCardNum(EnemyDeck[cardChosen]);
+            EnemyDeck.RemoveAt(cardChosen);
+
+            StartCoroutine(ActivateAbility(updatedSlot));
         }
 
         List<int> cardsGreater = FindGreater(EnemyField, FindGreatest(PlayerField));
@@ -393,10 +408,15 @@ public class GameController : MonoBehaviour
         {
             foreach (int i in cardsGreater)
             {
-                EnemyAttackValue = FindGreatest(EnemyField);
-                EnemySlotController AttackingCard = null;
+                EnemyAttackValue = i;
 
-                foreach(EnemySlotController slot in EnemySlots)
+                if (AttackingCard != null)
+                {
+                    AttackingCard.GetAnimator().SetBool("Damage", false);
+                    AttackingCard = null;
+                }
+
+                foreach (EnemySlotController slot in EnemySlots)
                 {
                     if (slot.GetCardNum() == EnemyAttackValue)
                     {
@@ -407,7 +427,6 @@ public class GameController : MonoBehaviour
 
                 canBlock = true;
 
-
                 AttackingCard.GetAnimator().SetBool("Waiting", true);
                 
 
@@ -415,11 +434,14 @@ public class GameController : MonoBehaviour
                 {
                     canBlock = false;
                     PlayerHealth--;
+                    AttackingCard.GetAnimator().SetBool("Damage", true);
                 }
 
                 yield return new WaitUntil(() => canBlock == false);
 
                 AttackingCard.GetAnimator().SetBool("Waiting", false);
+
+                yield return new WaitForSeconds(0.4f);
             }
         }
 
@@ -453,6 +475,8 @@ public class GameController : MonoBehaviour
         }
         else if (canBlock)
         {
+            print("Attack animation");
+            AttackingCard.GetAnimator().SetBool("Damage", true);
             canBlock = false;
             PlayerHealth--;
         }
@@ -521,11 +545,7 @@ public class GameController : MonoBehaviour
     {
         EnemyField.Clear();
 
-        EnemySlotController[] enemySlotControllers = FindObjectsOfType<EnemySlotController>();
-        foreach (EnemySlotController slot in enemySlotControllers)
-        {
-            EnemySlots.Add(slot);
-        }
+        EnemySlotController[] EnemySlots = FindObjectsOfType<EnemySlotController>();
 
         foreach (EnemySlotController slot in EnemySlots)
         {
@@ -563,7 +583,6 @@ public class GameController : MonoBehaviour
                 {
                     if (slot.GetCardNum() == FindSmallest(EnemyField))
                     {
-                        print("Destroy card");
                         EnemyDiscard.Add(slot.GetCardNum());
                         slot.SetCardNum(-1);
                         return FindSmallest(EnemyField);
@@ -582,6 +601,33 @@ public class GameController : MonoBehaviour
             //If the enemy has a higher card to block with, block with the weakest of the high cards
             print(FindSmallest(cardsGreater));
             return FindSmallest(cardsGreater);
+        }
+    }
+
+    private IEnumerator ActivateAbility(EnemySlotController slot)
+    {
+        //If card is ace of diamonds, upgrade player to diamond deck
+        if (slot.GetCardNum() == 14)
+        {
+            yield return new WaitForSeconds(0.5f);
+            Level = 2;
+            slot.SetCardNum(-1);
+        }
+
+        //If card is ace of clubs, upgrade player to clubs deck
+        else if (slot.GetCardNum() == 28)
+        {
+            yield return new WaitForSeconds(0.5f);
+            Level = 3;
+            slot.SetCardNum(-1);
+        }
+
+        //If card is ace of spades, upgrade player to spades deck
+        else if (slot.GetCardNum() == 42)
+        {
+            yield return new WaitForSeconds(0.5f);
+            Level = 4;
+            slot.SetCardNum(-1);
         }
     }
 
