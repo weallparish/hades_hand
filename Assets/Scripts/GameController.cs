@@ -217,6 +217,12 @@ public class GameController : MonoBehaviour
     [SerializeField]
     private UnityEngine.UI.Button attackButton3;
 
+    [SerializeField]
+    private GameObject titleScreen;
+
+    [SerializeField]
+    private GameObject titleScreenCardPrefab;
+
     /// <summary>
     /// Called before first frame
     /// </summary>
@@ -241,6 +247,14 @@ public class GameController : MonoBehaviour
         EnemySlots = FindObjectsOfType<EnemySlotController>();
 
         EnemyDeckLevel = 1;
+
+        for (int i = 0; i < 10; i++)
+        {
+            float xpos = Random.Range(0, 900);
+            float ypos = Random.Range(0, 450);
+            GameObject titleCard = Instantiate(titleScreenCardPrefab, new Vector3(xpos, ypos, titleScreen.transform.position.z), Quaternion.Euler(0.0f, 0.0f, Random.Range(0.0f,360.0f)) );
+            titleCard.transform.parent = titleScreen.transform;
+        }
 
         //Add listener to pass button
         passButton.onClick.AddListener(PassTurn);
@@ -610,7 +624,9 @@ public class GameController : MonoBehaviour
         if (slot.GetCardNum() == 14)
         {
             yield return new WaitForSeconds(0.5f);
-            Level = 2;
+            EnemyDeck.AddRange(EnemyDiscard);
+            EnemyDiscard.Clear();
+            EnemyDeck.AddRange(new List<int>() {15,16,17,18,19,20,21,22,23,24,25,26,28 });
             slot.SetCardNum(-1);
         }
 
@@ -618,7 +634,9 @@ public class GameController : MonoBehaviour
         else if (slot.GetCardNum() == 28)
         {
             yield return new WaitForSeconds(0.5f);
-            Level = 3;
+            EnemyDeck.AddRange(EnemyDiscard);
+            EnemyDiscard.Clear();
+            EnemyDeck.AddRange(new List<int>() {29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 42});
             slot.SetCardNum(-1);
         }
 
@@ -626,7 +644,9 @@ public class GameController : MonoBehaviour
         else if (slot.GetCardNum() == 42)
         {
             yield return new WaitForSeconds(0.5f);
-            Level = 4;
+            EnemyDeck.AddRange(EnemyDiscard);
+            EnemyDiscard.Clear();
+            EnemyDeck.AddRange(new List<int>() { 43, 44, 45, 46, 47, 48, 49 ,50 ,51 ,52 ,53 ,54 });
             slot.SetCardNum(-1);
         }
     }
