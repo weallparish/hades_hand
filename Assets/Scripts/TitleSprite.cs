@@ -5,7 +5,8 @@ using UnityEngine.UI;
 
 public class TitleSprite : CardRenderer
 {
-    Image imageRenderer;
+    [SerializeField]
+    private Image imageRenderer;
 
     // Start is called before the first frame update
     void Start()
@@ -21,6 +22,7 @@ public class TitleSprite : CardRenderer
 
     private void ChangeSprite(int num)
     {
+        print("Change sprite");
         //Set sprite to item "num" in array
         imageRenderer.sprite = spriteArray[num];
     }
