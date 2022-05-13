@@ -72,6 +72,11 @@ public class DrawPile : MonoBehaviour
         cardDrawn = 0;
 
         //Reset cards in deck
+        ResetCards();
+    }
+
+    public void ResetCards()
+    {
         deckCards = new List<int>();
 
         for (int i = 1; i < 13; i++)

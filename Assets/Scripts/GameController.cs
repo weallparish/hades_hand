@@ -24,6 +24,9 @@ public class GameController : MonoBehaviour
     /// </summary>
     public List<int> Hand;
 
+    [SerializeField]
+    private GameObject HandContainer;
+
     /// <summary>
     /// Current cards in player's field
     /// </summary>
@@ -221,6 +224,12 @@ public class GameController : MonoBehaviour
     private GameObject titleScreen;
 
     [SerializeField]
+    private GameObject playScreen;
+
+    [SerializeField]
+    private GameObject gameOverScreen;
+
+    [SerializeField]
     private GameObject titleScreenCardPrefab;
 
     /// <summary>
@@ -248,19 +257,41 @@ public class GameController : MonoBehaviour
 
         EnemyDeckLevel = 1;
 
-        for (int i = 0; i < 10; i++)
-        {
-            float xpos = Random.Range(0, 900);
-            float ypos = Random.Range(0, 450);
-            GameObject titleCard = Instantiate(titleScreenCardPrefab, new Vector3(xpos, ypos, titleScreen.transform.position.z), Quaternion.Euler(0.0f, 0.0f, Random.Range(0.0f,360.0f)) );
-            titleCard.transform.parent = titleScreen.transform;
-        }
-
         //Add listener to pass button
         passButton.onClick.AddListener(PassTurn);
 
-        //Begin round
+        //Drop cards
+        StartCoroutine(DropCards());
+    }
+
+    public void StartGame()
+    {
+        titleScreen.SetActive(false);
+        gameOverScreen.SetActive(false);
+        playScreen.SetActive(true);
         StartCoroutine(BeginRound());
+    }
+
+    public void TitleScreen()
+    {
+        gameOverScreen.SetActive(false);
+        playScreen.SetActive(false);
+        titleScreen.SetActive(true);
+
+        StartCoroutine(DropCards());
+    }
+
+    private IEnumerator DropCards()
+    {
+        while(titleScreen.activeInHierarchy)
+        {
+            float xpos = Random.Range(0, 900);
+            float ypos = Random.Range(0, 450);
+            GameObject titleCard = Instantiate(titleScreenCardPrefab, new Vector3(xpos, ypos, titleScreen.transform.position.z), Quaternion.Euler(0.0f, 0.0f, Random.Range(0.0f, 360.0f)));
+            titleCard.transform.parent = titleScreen.transform;
+
+            yield return new WaitForSeconds(Random.Range(0.1f, 5.0f));
+        }
     }
 
     /// <summary>
@@ -360,18 +391,34 @@ public class GameController : MonoBehaviour
     /// <returns></returns>
     private IEnumerator BeginRound()
     {
-        yield return new WaitForSeconds(1);
 
         print("New Round");
         //Set default round values
         Draws = 0;
         Plays = PlaysMax;
         SacrificePoints = 0;
+        Level = 1;
+
+        Hand.Clear();
+
+        drawPile.ResetCards();
 
         PlayerHealth = 5;
         EnemyHealth = 5;
 
         EnemyDeck = new List<int> { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 14 };
+
+        foreach (EnemySlotController slot in EnemySlots)
+        {
+            slot.SetCardNum(-1);
+        }
+
+        CardController[] previousCards = HandContainer.GetComponentsInChildren<CardController>();
+
+        foreach (CardController card in previousCards)
+        {
+            Destroy(card.gameObject);
+        }
 
         //Draw cards into player's hand
         for (int i = 0; i < 3; i++)
@@ -456,6 +503,11 @@ public class GameController : MonoBehaviour
                 AttackingCard.GetAnimator().SetBool("Waiting", false);
 
                 yield return new WaitForSeconds(0.4f);
+
+                if (PlayerHealth <= 0)
+                {
+                    TitleScreen();
+                }
             }
         }
 
@@ -649,6 +701,8 @@ public class GameController : MonoBehaviour
             EnemyDeck.AddRange(new List<int>() { 43, 44, 45, 46, 47, 48, 49 ,50 ,51 ,52 ,53 ,54 });
             slot.SetCardNum(-1);
         }
+
+        RecalibrateField();
     }
 
 }
