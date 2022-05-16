@@ -396,6 +396,11 @@ public class SlotController : CardRenderer
                     turnPlayed = gameController.turnNum;
                 }
             }
+
+            if (gameController.EnemyHealth <= 0)
+            {
+                gameController.WinScreen();
+            }
         }
         else if (gameController.canBlock)
         {

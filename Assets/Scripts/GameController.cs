@@ -52,6 +52,8 @@ public class GameController : MonoBehaviour
     /// </summary>
     public List<int> EnemyDiscard;
 
+    private int titleCardAmount;
+
     /// <summary>
     /// Enemy slot controllers in enemy field
     /// </summary>
@@ -139,6 +141,9 @@ public class GameController : MonoBehaviour
     /// </summary>
     [SerializeField]
     private Sprite spadeImg;
+
+    [SerializeField]
+    private Sprite cardBackImg;
 
     /// <summary>
     /// Game object controlling diamond card
@@ -230,7 +235,26 @@ public class GameController : MonoBehaviour
     private GameObject gameOverScreen;
 
     [SerializeField]
+    private GameObject winScreen;
+
+    [SerializeField]
+    private GameObject settingsScreen;
+
+    [SerializeField]
     private GameObject titleScreenCardPrefab;
+
+    //Settings Variables
+    [SerializeField]
+    private UnityEngine.UI.Slider healthSlider;
+
+    [SerializeField]
+    private TMPro.TextMeshProUGUI healthSettingDisplay;
+
+    [SerializeField]
+    private UnityEngine.UI.Slider handSlider;
+
+    [SerializeField]
+    private TMPro.TextMeshProUGUI handSettingDisplay;
 
     /// <summary>
     /// Called before first frame
@@ -241,6 +265,7 @@ public class GameController : MonoBehaviour
         Level = 1;
         playerTurn = false;
         turnNum = 1;
+        titleCardAmount = 0;
 
         SelectedCard = null;
         PlayedCard = null;
@@ -268,27 +293,54 @@ public class GameController : MonoBehaviour
     {
         titleScreen.SetActive(false);
         gameOverScreen.SetActive(false);
+        winScreen.SetActive(false);
         playScreen.SetActive(true);
         StartCoroutine(BeginRound());
+    }
+
+    public void GameOverScreen()
+    {
+        playScreen.SetActive(false);
+        titleScreen.SetActive(false);
+        winScreen.SetActive(false);
+        gameOverScreen.SetActive(true);
     }
 
     public void TitleScreen()
     {
         gameOverScreen.SetActive(false);
         playScreen.SetActive(false);
+        winScreen.SetActive(false);
+        settingsScreen.SetActive(false);
         titleScreen.SetActive(true);
 
         StartCoroutine(DropCards());
     }
 
+    public void WinScreen()
+    {
+        gameOverScreen.SetActive(false);
+        playScreen.SetActive(false);
+        titleScreen.SetActive(false);
+        winScreen.SetActive(true);
+    }
+
+    public void SettingsScreen()
+    {
+        titleScreen.SetActive(false);
+        settingsScreen.SetActive(true);
+    }
+
     private IEnumerator DropCards()
     {
-        while(titleScreen.activeInHierarchy)
+        while(titleScreen.activeInHierarchy && titleCardAmount <= 100)
         {
             float xpos = Random.Range(0, 900);
             float ypos = Random.Range(0, 450);
             GameObject titleCard = Instantiate(titleScreenCardPrefab, new Vector3(xpos, ypos, titleScreen.transform.position.z), Quaternion.Euler(0.0f, 0.0f, Random.Range(0.0f, 360.0f)));
             titleCard.transform.parent = titleScreen.transform;
+
+            titleCardAmount++;
 
             yield return new WaitForSeconds(Random.Range(0.1f, 5.0f));
         }
@@ -300,25 +352,46 @@ public class GameController : MonoBehaviour
     void Update()
     {
         //If level >= 2, display diamond sprite
-        if (Level >= 2 && EnemyDeckLevel < 2)
+        if (Level >= 2)
         {
-            diamondSprite.sprite = diamondImg;
-            EnemyDeckLevel = 2;
+            if (EnemyDeckLevel < 2)
+            {
+                diamondSprite.sprite = diamondImg;
+                EnemyDeckLevel = 2;
+            }
+        }
+        else
+        {
+            diamondSprite.sprite = cardBackImg;
         }
 
         //If level >= 3, display club sprite
-        if (Level >= 3 && EnemyDeckLevel < 3)
+        if (Level >= 3)
         {
-            clubSprite.sprite = clubImg;
-            maxPlayable = 28;
-            EnemyDeckLevel = 3;
+            if (EnemyDeckLevel < 3)
+            {
+                clubSprite.sprite = clubImg;
+                maxPlayable = 28;
+                EnemyDeckLevel = 3;
+            }
+        }
+        else
+        {
+            clubSprite.sprite = cardBackImg;
         }
 
         //If level >= 4, display spade sprite
-        if (Level >= 4 && EnemyDeckLevel < 4)
+        if (Level >= 4)
         {
-            spadeSprite.sprite = spadeImg;
-            EnemyDeckLevel = 4;
+            if (EnemyDeckLevel < 4)
+            {
+                spadeSprite.sprite = spadeImg;
+                EnemyDeckLevel = 4;
+            }
+        }
+        else
+        {
+            spadeSprite.sprite = cardBackImg;
         }
 
         if (playerTurn)
@@ -383,6 +456,8 @@ public class GameController : MonoBehaviour
         spCounter.text = "SPs: " + SacrificePoints;
         healthCounter.text = "Health: " + PlayerHealth;
         enemyCounter.text = "Enemy: " + EnemyHealth;
+        healthSettingDisplay.text = "(" + healthSlider.value + ")";
+        handSettingDisplay.text = "(" + handSlider.value + ")";
     }
 
     /// <summary>
@@ -403,8 +478,8 @@ public class GameController : MonoBehaviour
 
         drawPile.ResetCards();
 
-        PlayerHealth = 5;
-        EnemyHealth = 5;
+        PlayerHealth = (int) healthSlider.value;
+        EnemyHealth = (int) healthSlider.value;
 
         EnemyDeck = new List<int> { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 14 };
 
@@ -420,8 +495,15 @@ public class GameController : MonoBehaviour
             Destroy(card.gameObject);
         }
 
+        SlotController[] previousField = FindObjectsOfType<SlotController>();
+
+        foreach (SlotController slot in previousField)
+        {
+            slot.cards.Clear();
+        }
+
         //Draw cards into player's hand
-        for (int i = 0; i < 3; i++)
+        for (int i = 0; i < handSlider.value; i++)
         {
             drawPile.DrawCard();
             yield return new WaitForSeconds(0.1f);
@@ -506,7 +588,7 @@ public class GameController : MonoBehaviour
 
                 if (PlayerHealth <= 0)
                 {
-                    TitleScreen();
+                    GameOverScreen();
                 }
             }
         }
