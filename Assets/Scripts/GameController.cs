@@ -333,14 +333,16 @@ public class GameController : MonoBehaviour
 
     private IEnumerator DropCards()
     {
-        while(titleScreen.activeInHierarchy && titleCardAmount <= 100)
+        while(titleScreen.activeInHierarchy && titleCardAmount <= 250)
         {
-            float xpos = Random.Range(0, 900);
-            float ypos = Random.Range(0, 450);
+            float xpos = Random.Range(0, Screen.width);
+            float ypos = Random.Range(0, Screen.height);
             GameObject titleCard = Instantiate(titleScreenCardPrefab, new Vector3(xpos, ypos, titleScreen.transform.position.z), Quaternion.Euler(0.0f, 0.0f, Random.Range(0.0f, 360.0f)));
             titleCard.transform.parent = titleScreen.transform;
 
             titleCardAmount++;
+
+            print("Card Count: " + titleCardAmount);
 
             yield return new WaitForSeconds(Random.Range(0.1f, 5.0f));
         }
@@ -466,8 +468,6 @@ public class GameController : MonoBehaviour
     /// <returns></returns>
     private IEnumerator BeginRound()
     {
-
-        print("New Round");
         //Set default round values
         Draws = 0;
         Plays = PlaysMax;
